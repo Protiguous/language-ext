@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<IEnumerable<A>, IEnumerable<B>, A, B>,
         Applicative<IEnumerable<Func<A, B>>, IEnumerable<A>, IEnumerable<B>, A, B>
     {
-        public static readonly ApplEnumerable<A, B> Inst = default(ApplEnumerable<A, B>);
+        public static readonly ApplEnumerable<A, B> Inst = default;
 
         [Pure]
         public IEnumerable<B> Action(IEnumerable<A> fa, IEnumerable<B> fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplEnumerable<A, B, C> :
         Applicative<IEnumerable<Func<A, Func<B, C>>>, IEnumerable<Func<B, C>>, IEnumerable<A>, IEnumerable<B>, IEnumerable<C>, A, B, C>
     {
-        public static readonly ApplEnumerable<A, B, C> Inst = default(ApplEnumerable<A, B, C>);
+        public static readonly ApplEnumerable<A, B, C> Inst = default;
 
         [Pure]
         public IEnumerable<Func<B, C>> Apply(IEnumerable<Func<A, Func<B, C>>> fabc, IEnumerable<A> fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<IEnumerable<Func<A, A>>, IEnumerable<A>, IEnumerable<A>, A, A>,
         Applicative<IEnumerable<Func<A, Func<A, A>>>, IEnumerable<Func<A, A>>, IEnumerable<A>, IEnumerable<A>, IEnumerable<A>, A, A, A>
     {
-        public static readonly ApplEnumerable<A> Inst = default(ApplEnumerable<A>);
+        public static readonly ApplEnumerable<A> Inst = default;
 
         [Pure]
         public IEnumerable<A> Action(IEnumerable<A> fa, IEnumerable<A> fb) =>

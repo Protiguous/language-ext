@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
     /// <returns>True if x and y are equal</returns>
     public struct EqLst<EQ, A> : Eq<Lst<A>> where EQ : struct, Eq<A>
     {
-        public static readonly EqLst<EQ, A> Inst = default(EqLst<EQ, A>);
+        public static readonly EqLst<EQ, A> Inst = default;
 
         [Pure]
         public bool Equals(Lst<A> x, Lst<A> y)
@@ -50,7 +50,7 @@ namespace LanguageExt.ClassInstances
     /// <returns>True if x and y are equal</returns>
     public struct EqLst<A> : Eq<Lst<A>> 
     {
-        public static readonly EqLst<A> Inst = default(EqLst<A>);
+        public static readonly EqLst<A> Inst = default;
 
         [Pure]
         public bool Equals(Lst<A> x, Lst<A> y) =>

@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct TBigInt : Num<bigint>, Monoid<bigint>, Bool<bigint>
     {
-        public static readonly TBigInt Inst = default(TBigInt);
+        public static readonly TBigInt Inst = default;
 
         /// <summary>
         /// Equality test

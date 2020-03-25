@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdString : Ord<string>
     {
-        public static readonly OrdString Inst = default(OrdString);
+        public static readonly OrdString Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -45,7 +45,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdStringOrdinalIgnoreCase : Ord<string>
     {
-        public static readonly OrdStringOrdinalIgnoreCase Inst = default(OrdStringOrdinalIgnoreCase);
+        public static readonly OrdStringOrdinalIgnoreCase Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -82,7 +82,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdStringOrdinal : Ord<string>
     {
-        public static readonly OrdStringOrdinal Inst = default(OrdStringOrdinal);
+        public static readonly OrdStringOrdinal Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -119,7 +119,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdStringCurrentCultureIgnoreCase : Ord<string>
     {
-        public static readonly OrdStringCurrentCultureIgnoreCase Inst = default(OrdStringCurrentCultureIgnoreCase);
+        public static readonly OrdStringCurrentCultureIgnoreCase Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -156,7 +156,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdStringCurrentCulture : Ord<string>
     {
-        public static readonly OrdStringCurrentCulture Inst = default(OrdStringCurrentCulture);
+        public static readonly OrdStringCurrentCulture Inst = default;
 
         /// <summary>
         /// Compare two values

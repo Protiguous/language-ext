@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
     public struct OrdSeq<OrdA, A> : Ord<Seq<A>>
         where OrdA : struct, Ord<A>
     {
-        public static readonly OrdSeq<OrdA, A> Inst = default(OrdSeq<OrdA, A>);
+        public static readonly OrdSeq<OrdA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -72,7 +72,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdSeq<A> : Ord<Seq<A>>
     {
-        public static readonly OrdSeq<A> Inst = default(OrdSeq<A>);
+        public static readonly OrdSeq<A> Inst = default;
 
         /// <summary>
         /// Equality test

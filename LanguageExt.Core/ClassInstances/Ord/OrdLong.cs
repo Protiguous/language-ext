@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdLong : Ord<long>
     {
-        public static readonly OrdLong Inst = default(OrdLong);
+        public static readonly OrdLong Inst = default;
 
         /// <summary>
         /// Equality test

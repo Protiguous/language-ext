@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
     /// <typeparam name="A">The type of the ordered values.</typeparam>
     public struct Min<ORD, A> : Semigroup<A> where ORD : struct, Ord<A>
     {
-        public static readonly Min<ORD, A> Inst = default(Min<ORD, A>);
+        public static readonly Min<ORD, A> Inst = default;
 
         [Pure]
         public A Append(A x, A y) =>
@@ -24,7 +24,7 @@ namespace LanguageExt.ClassInstances
     /// <typeparam name="A">The type of the ordered values.</typeparam>
     public struct Max<ORD, A> : Semigroup<A> where ORD : struct, Ord<A>
     {
-        public static readonly Max<ORD, A> Inst = default(Max<ORD, A>);
+        public static readonly Max<ORD, A> Inst = default;
 
         [Pure]
         public A Append(A x, A y) =>

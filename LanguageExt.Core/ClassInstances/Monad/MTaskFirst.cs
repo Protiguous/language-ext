@@ -27,7 +27,7 @@ namespace LanguageExt.ClassInstances
         FoldableAsync<Task<A>, A>,
         BiFoldableAsync<Task<A>, A, Unit>
     {
-        public static readonly MTaskFirst<A> Inst = default(MTaskFirst<A>);
+        public static readonly MTaskFirst<A> Inst = default;
 
         [Pure]
         public Task<A> None =>

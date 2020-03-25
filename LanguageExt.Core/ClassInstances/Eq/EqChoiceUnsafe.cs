@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
         where EQA    : struct, Eq<A>
         where EQB    : struct, Eq<B>
     {
-        public static readonly EqChoiceUnsafe<EQA, EQB, CHOICE, CH, A, B> Inst = default(EqChoiceUnsafe<EQA, EQB, CHOICE, CH, A, B>);
+        public static readonly EqChoiceUnsafe<EQA, EQB, CHOICE, CH, A, B> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -53,7 +53,7 @@ namespace LanguageExt.ClassInstances
         where CHOICE : struct, ChoiceUnsafe<CH, A, B>
         where EQB : struct, Eq<B>
     {
-        public static EqChoiceUnsafe<EQB, CHOICE, CH, A, B> Inst = default(EqChoiceUnsafe<EQB, CHOICE, CH, A, B>);
+        public static EqChoiceUnsafe<EQB, CHOICE, CH, A, B> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -81,7 +81,7 @@ namespace LanguageExt.ClassInstances
     public struct EqChoiceUnsafe<CHOICE, CH, A, B> : Eq<CH>
         where CHOICE : struct, ChoiceUnsafe<CH, A, B>
     {
-        public static EqChoiceUnsafe<CHOICE, CH, A, B> Inst = default(EqChoiceUnsafe<CHOICE, CH, A, B>);
+        public static EqChoiceUnsafe<CHOICE, CH, A, B> Inst = default;
 
         /// <summary>
         /// Equality test

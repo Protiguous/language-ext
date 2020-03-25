@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         FoldableAsync<TryAsync<A>, A>,
         BiFoldableAsync<TryAsync<A>, A, Unit>
     {
-        public static readonly MTryFirstAsync<A> Inst = default(MTryFirstAsync<A>);
+        public static readonly MTryFirstAsync<A> Inst = default;
 
         static TryAsync<A> none = () => throw new BottomException();
 

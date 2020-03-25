@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct TNumericChar : Eq<char>, Ord<char>, Monoid<char>, Arithmetic<char>
     {
-        public static readonly TNumericChar Inst = default(TNumericChar);
+        public static readonly TNumericChar Inst = default;
 
         /// <summary>
         /// Equality test

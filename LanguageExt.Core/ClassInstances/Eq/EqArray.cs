@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqArray<EqA, A> : Eq<A[]> where EqA : struct, Eq<A>
     {
-        public static readonly EqArray<EqA, A> Inst = default(EqArray<EqA, A>);
+        public static readonly EqArray<EqA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -47,7 +47,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqArray<A> : Eq<A[]>
     {
-        public static readonly EqArray<A> Inst = default(EqArray<A>);
+        public static readonly EqArray<A> Inst = default;
 
         /// <summary>
         /// Equality test

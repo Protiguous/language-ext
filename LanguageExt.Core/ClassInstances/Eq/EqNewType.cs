@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         where EQ : struct, Eq<A>
         where NEWTYPE : NewType<NEWTYPE, A>
     {
-        public static readonly EqNewType<NEWTYPE, EQ, A> Inst = default(EqNewType<NEWTYPE, EQ, A>);
+        public static readonly EqNewType<NEWTYPE, EQ, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -47,7 +47,7 @@ namespace LanguageExt.ClassInstances
     public struct EqNewType<NEWTYPE, A> : Eq<NewType<NEWTYPE, A>>
         where NEWTYPE : NewType<NEWTYPE, A>
     {
-        public static readonly EqNewType<NEWTYPE, A> Inst = default(EqNewType<NEWTYPE, A>);
+        public static readonly EqNewType<NEWTYPE, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -76,7 +76,7 @@ namespace LanguageExt.ClassInstances
         where PRED : struct, Pred<A>
         where NEWTYPE : NewType<NEWTYPE, A, PRED, ORD>
     {
-        public static readonly EqNewType<NEWTYPE, ORD, A, PRED> Inst = default(EqNewType<NEWTYPE, ORD, A, PRED>);
+        public static readonly EqNewType<NEWTYPE, ORD, A, PRED> Inst = default;
 
         /// <summary>
         /// Equality test

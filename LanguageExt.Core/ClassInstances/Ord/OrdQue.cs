@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
     public struct OrdQue<OrdA, A> : Ord<Que<A>>
         where OrdA : struct, Ord<A>
     {
-        public static readonly OrdQue<OrdA, A> Inst = default(OrdQue<OrdA, A>);
+        public static readonly OrdQue<OrdA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -72,7 +72,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdQue<A> : Ord<Que<A>>
     {
-        public static readonly OrdQue<A> Inst = default(OrdQue<A>);
+        public static readonly OrdQue<A> Inst = default;
 
         /// <summary>
         /// Equality test

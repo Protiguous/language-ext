@@ -7,7 +7,7 @@ namespace LanguageExt.ClassInstances.Pred
     public struct MaxCount<MAX> : Pred<ListInfo>
         where MAX : struct, Const<int>
     {
-        public static readonly MaxCount<MAX> Is = default(MaxCount<MAX>);
+        public static readonly MaxCount<MAX> Is = default;
 
         [Pure]
         public bool True(ListInfo value) =>

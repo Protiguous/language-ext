@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
         Functor<Try<A>, Try<B>, A, B>,
         BiFunctor<Try<A>, Try<B>, A, Unit, B>
     {
-        public static readonly FTry<A, B> Inst = default(FTry<A, B>);
+        public static readonly FTry<A, B> Inst = default;
 
         [Pure]
         public Try<B> BiMap(Try<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>

@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
         where NUM : struct, Num<A>
         where NUMTYPE : NumType<NUMTYPE, NUM, A>
     {
-        public static readonly OrdNumType<NUMTYPE, NUM, A> Inst = default(OrdNumType<NUMTYPE, NUM, A>);
+        public static readonly OrdNumType<NUMTYPE, NUM, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         where PRED    : struct, Pred<A>
         where NUMTYPE : NumType<NUMTYPE, NUM, A, PRED>
     {
-        public static readonly OrdNumType<NUMTYPE, NUM, A, PRED> Inst = default(OrdNumType<NUMTYPE, NUM, A, PRED>);
+        public static readonly OrdNumType<NUMTYPE, NUM, A, PRED> Inst = default;
 
         /// <summary>
         /// Equality test

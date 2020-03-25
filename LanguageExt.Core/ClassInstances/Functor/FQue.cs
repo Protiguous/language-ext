@@ -7,7 +7,7 @@ namespace LanguageExt.ClassInstances
     public struct FQue<A, B> : 
         Functor<Que<A>, Que<B>, A, B>
     {
-        public static readonly FQue<A, B> Inst = default(FQue<A, B>);
+        public static readonly FQue<A, B> Inst = default;
 
         [Pure]
         public Que<B> Map(Que<A> ma, Func<A, B> f) =>

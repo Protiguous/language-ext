@@ -8,7 +8,7 @@ namespace LanguageExt
     /// <typeparam name="A">Bound value type</typeparam>
     public struct Identity<A>
     {
-        public static readonly Identity<A> Bottom = default(Identity<A>);
+        public static readonly Identity<A> Bottom = default;
 
         public readonly A value;
         public readonly bool IsBottom;

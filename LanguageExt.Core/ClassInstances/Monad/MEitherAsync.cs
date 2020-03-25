@@ -34,7 +34,7 @@ namespace LanguageExt.ClassInstances
                 if (resB.IsCompleted && !resB.IsFaulted && !resB.IsCanceled && resB.Result.IsLeft) return resB.Result.Head();
                 if(resA.Result.IsRight && resB.Result.IsRight)
                 {
-                    return new EitherData<L, R>(EitherStatus.IsRight, ff(resA.Result.RightValue, resB.Result.RightValue), default(L));
+                    return new EitherData<L, R>(EitherStatus.IsRight, ff(resA.Result.RightValue, resB.Result.RightValue), default);
                 }
                 return EitherData<L, R>.Bottom;
             }

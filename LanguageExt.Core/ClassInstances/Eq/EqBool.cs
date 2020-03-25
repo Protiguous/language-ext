@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqBool : Eq<bool>
     {
-        public static readonly EqBool Inst = default(EqBool);
+        public static readonly EqBool Inst = default;
 
         /// <summary>
         /// Equality test

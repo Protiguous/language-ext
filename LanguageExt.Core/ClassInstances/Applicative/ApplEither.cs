@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<Either<L, R>, Either<L, R2>, L, R, R2>,
         Applicative<Either<L, Func<R, R2>>, Either<L, R>, Either<L, R2>, R, R2>
     {
-        public static readonly ApplEither<L, R, R2> Inst = default(ApplEither<L, R, R2>);
+        public static readonly ApplEither<L, R, R2> Inst = default;
 
         [Pure]
         public Either<L, R2> BiMap(Either<L, R> ma, Func<L, R2> fa, Func<R, R2> fb) =>
@@ -41,7 +41,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<Either<L, R>, Either<L2, R2>, L, R, L2, R2>,
         Applicative<Either<L, Func<R, R2>>, Either<L, R>, Either<L, R2>, R, R2>
     {
-        public static readonly ApplEitherBi<L, R, L2, R2> Inst = default(ApplEitherBi<L, R, L2, R2>);
+        public static readonly ApplEitherBi<L, R, L2, R2> Inst = default;
 
         [Pure]
         public Either<L2, R2> BiMap(Either<L, R> ma, Func<L, L2> fa, Func<R, R2> fb) =>
@@ -70,7 +70,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplEither<L, A, B, C> :
         Applicative<Either<L, Func<A, Func<B, C>>>, Either<L, Func<B, C>>, Either<L, A>, Either<L, B>, Either<L, C>, A, B, C>
     {
-        public static readonly ApplEither<L, A, B, C> Inst = default(ApplEither<L, A, B, C>);
+        public static readonly ApplEither<L, A, B, C> Inst = default;
 
         [Pure]
         public Either<L, Func<B, C>> Apply(Either<L, Func<A, Func<B, C>>> fab, Either<L, A> fa) =>

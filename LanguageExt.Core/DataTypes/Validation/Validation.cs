@@ -29,26 +29,74 @@ namespace LanguageExt
         ISerializable
         where MonoidFail : struct, Monoid<FAIL>, Eq<FAIL>
     {
-        readonly FAIL fail;
-        readonly SUCCESS success;
-        readonly Validation.StateType state;
+        private readonly FAIL fail;
+        private readonly Validation.StateType state;
+        private readonly SUCCESS success;
+
+        internal FAIL FailValue => isnull(fail) ? default(MonoidFail).Empty() : fail;
+
+        internal SUCCESS SuccessValue => success;
+
+        /// <summary>
+        /// Reference version for use in pattern-matching
+        /// </summary>
+        [Pure]
+        public ValidationCase<FAIL, SUCCESS> Case =>
+            state switch
+            {
+                Validation.StateType.Success => SuccCase<FAIL, SUCCESS>.New(success),
+                Validation.StateType.Fail => FailCase<FAIL, SUCCESS>.New(fail),
+                _ => null
+            };
 
         [Pure]
-        Validation(SUCCESS success)
+        public bool IsFail =>
+            state == Validation.StateType.Fail;
+
+        [Pure]
+        public bool IsSuccess =>
+            state == Validation.StateType.Success;
+
+        [Pure]
+        private Validation(SUCCESS success)
         {
             if (isnull(success)) throw new ValueIsNullException();
             this.success = success;
-            this.fail = default(FAIL);
+            this.fail = default;
             this.state = Validation.StateType.Success;
         }
 
         [Pure]
-        Validation(FAIL fail)
+        private Validation(FAIL fail)
         {
             if (isnull(fail)) throw new ValueIsNullException();
-            this.success = default(SUCCESS);
+            this.success = default;
             this.fail = fail;
             this.state = Validation.StateType.Fail;
+        }
+
+        /// <summary>
+        /// Ctor that facilitates serialisation
+        /// </summary>
+        [Pure]
+        private Validation(SerializationInfo info, StreamingContext context)
+        {
+            state = (Validation.StateType)info.GetValue("State", typeof(Validation.StateType));
+            switch (state)
+            {
+                case Validation.StateType.Success:
+                    success = (SUCCESS)info.GetValue("Success", typeof(SUCCESS));
+                    fail = default;
+                    break;
+
+                case Validation.StateType.Fail:
+                    fail = (FAIL)info.GetValue("Fail", typeof(FAIL));
+                    success = default;
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         /// <summary>
@@ -62,7 +110,7 @@ namespace LanguageExt
             {
                 this.state = Validation.StateType.Fail;
                 this.fail = default(MonoidFail).Empty();
-                this.success = default(SUCCESS);
+                this.success = default;
             }
             else
             {
@@ -72,57 +120,17 @@ namespace LanguageExt
             }
         }
 
-        /// <summary>
-        /// Ctor that facilitates serialisation
-        /// </summary>
-        [Pure]
-        Validation(SerializationInfo info, StreamingContext context)
-        {
-            state = (Validation.StateType)info.GetValue("State", typeof(Validation.StateType));
-            switch (state)
-            {
-                case Validation.StateType.Success:
-                    success = (SUCCESS)info.GetValue("Success", typeof(SUCCESS));
-                    fail = default(FAIL);
-                    break;
-                case Validation.StateType.Fail:
-                    fail = (FAIL)info.GetValue("Fail", typeof(FAIL));
-                    success = default(SUCCESS);
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("State", state);
-            if (IsSuccess) info.AddValue("Success", SuccessValue);
-            if (IsFail) info.AddValue("Fail", FailValue);
-        }
-
-        internal FAIL FailValue => isnull(fail) ? default(MonoidFail).Empty() : fail;
-        internal SUCCESS SuccessValue => success;
-
-        [Pure]
-        public bool IsFail =>
-            state == Validation.StateType.Fail;
-
-        [Pure]
-        public bool IsSuccess =>
-            state == Validation.StateType.Success;
-
-        IEnumerable<ValidationData<MonoidFail, FAIL, SUCCESS>> Enum()
+        private IEnumerable<ValidationData<MonoidFail, FAIL, SUCCESS>> Enum()
         {
             yield return new ValidationData<MonoidFail, FAIL, SUCCESS>(state, success, FailValue);
         }
 
-        public IEnumerator<ValidationData<MonoidFail, FAIL, SUCCESS>> GetEnumerator() =>
-            Enum().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() =>
-            Enum().GetEnumerator();
+        /// <summary>
+        /// Fail constructor
+        /// </summary>
+        [Pure]
+        public static Validation<MonoidFail, FAIL, SUCCESS> Fail(FAIL fail) =>
+            new Validation<MonoidFail, FAIL, SUCCESS>(fail);
 
         /// <summary>
         /// Implicit conversion operator from `SUCCESS` to `Validation<MonoidFail, FAIL, SUCCESS>`
@@ -147,16 +155,96 @@ namespace LanguageExt
                 : Fail(value);
 
         /// <summary>
-        /// Reference version for use in pattern-matching
+        /// Non-equality operator override
         /// </summary>
         [Pure]
-        public ValidationCase<FAIL, SUCCESS> Case =>
-            state switch
-            {
-                Validation.StateType.Success => SuccCase<FAIL, SUCCESS>.New(success),
-                Validation.StateType.Fail    => FailCase<FAIL, SUCCESS>.New(fail),
-                _                            => null
-            };
+        public static bool operator !=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            !(lhs == rhs);
+
+        /// <summary>
+        /// Comparison operator
+        /// </summary>
+        /// <param name="lhs">The left hand side of the operation</param>
+        /// <param name="rhs">The right hand side of the operation</param>
+        /// <returns>True if lhs < rhs</returns>
+        [Pure]
+        public static bool operator <(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            OrdChoice<
+                OrdDefault<FAIL>,
+                OrdDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Compare(lhs, rhs) < 0;
+
+        /// <summary>
+        /// Comparison operator
+        /// </summary>
+        /// <param name="lhs">The left hand side of the operation</param>
+        /// <param name="rhs">The right hand side of the operation</param>
+        /// <returns>True if lhs <= rhs</returns>
+        [Pure]
+        public static bool operator <=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            OrdChoice<
+                OrdDefault<FAIL>,
+                OrdDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Compare(lhs, rhs) <= 0;
+
+        /// <summary>
+        /// Equality operator override
+        /// </summary>
+        [Pure]
+        public static bool operator ==(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            lhs.Equals(rhs);
+
+        /// <summary>
+        /// Comparison operator
+        /// </summary>
+        /// <param name="lhs">The left hand side of the operation</param>
+        /// <param name="rhs">The right hand side of the operation</param>
+        /// <returns>True if lhs > rhs</returns>
+        [Pure]
+        public static bool operator >(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            OrdChoice<
+                OrdDefault<FAIL>,
+                OrdDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Compare(lhs, rhs) > 0;
+
+        /// <summary>
+        /// Comparison operator
+        /// </summary>
+        /// <param name="lhs">The left hand side of the operation</param>
+        /// <param name="rhs">The right hand side of the operation</param>
+        /// <returns>True if lhs >= rhs</returns>
+        [Pure]
+        public static bool operator >=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
+            OrdChoice<
+                OrdDefault<FAIL>,
+                OrdDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Compare(lhs, rhs) >= 0;
+
+        /// <summary>
+        /// Override of the False operator to return True if the Validation is Fail
+        /// </summary>
+        [Pure]
+        public static bool operator false(Validation<MonoidFail, FAIL, SUCCESS> value) =>
+            value.IsFail;
+
+        /// <summary>
+        /// Override of the True operator to return True if the Validation is Success
+        /// </summary>
+        [Pure]
+        public static bool operator true(Validation<MonoidFail, FAIL, SUCCESS> value) =>
+            value.IsSuccess;
 
         /// <summary>
         /// Success constructor
@@ -166,11 +254,136 @@ namespace LanguageExt
             new Validation<MonoidFail, FAIL, SUCCESS>(success);
 
         /// <summary>
-        /// Fail constructor
+        /// Bi-bind.  Allows mapping of both monad states
         /// </summary>
         [Pure]
-        public static Validation<MonoidFail, FAIL, SUCCESS> Fail(FAIL fail) =>
-            new Validation<MonoidFail, FAIL, SUCCESS>(fail);
+        public Validation<MonoidFail, FAIL, B> BiBind<B>(Func<SUCCESS, Validation<MonoidFail, FAIL, B>> Succ, Func<FAIL, Validation<MonoidFail, FAIL, B>> Fail) =>
+            IsSuccess
+                ? Succ(SuccessValue)
+                : Fail(FailValue);
+
+        /// <summary>
+        /// Invokes a predicate on the value of the Validation
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <param name="self">Validation to check existence of</param>
+        /// <param name="Success">Success predicate</param>
+        /// <param name="Fail">Fail predicate</param>
+        [Pure]
+        public bool BiExists(Func<SUCCESS, bool> Success, Func<FAIL, bool> Fail) =>
+            biExists<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
+
+        /// <summary>
+        /// <para>
+        /// Validation types are like lists of 0 or 1 items, and therefore follow the
+        /// same rules when folding.
+        /// </para><para>
+        /// In the case of lists, 'Fold', when applied to a binary
+        /// operator, a starting value(typically the Fail-identity of the operator),
+        /// and a list, reduces the list using the binary operator, from Fail to
+        /// Success:
+        /// </para>
+        /// </summary>
+        /// <typeparam name="S">Aggregate state type</typeparam>
+        /// <param name="state">Initial state</param>
+        /// <param name="Success">Folder function, applied if Validation is in a Success state</param>
+        /// <param name="Fail">Folder function, applied if Validation is in a Fail state</param>
+        /// <returns>The aggregate state</returns>
+        [Pure]
+        public S BiFold<S>(S state, Func<S, SUCCESS, S> Success, Func<S, FAIL, S> Fail) =>
+            default(FoldValidation<MonoidFail, FAIL, SUCCESS>).BiFold(this, state, Fail, Success);
+
+        /// <summary>
+        /// Invokes a predicate on the value of the Validation if it's in the Success state
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <param name="self">Validation to forall</param>
+        /// <param name="Success">Predicate</param>
+        /// <param name="Fail">Predicate</param>
+        /// <returns>True if Validation Predicate returns true</returns>
+        [Pure]
+        public bool BiForAll(Func<SUCCESS, bool> Success, Func<FAIL, bool> Fail) =>
+            biForAll<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
+
+        /// <summary>
+        /// Iterate the Validation
+        /// action is invoked if in the Success state
+        /// </summary>
+        public Unit BiIter(Action<SUCCESS> Success, Action<FAIL> Fail) =>
+            biIter<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
+
+        /// <summary>
+        /// Bi-maps the value in the Validation if it's in a Success state
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <typeparam name="RRet">Success return</typeparam>
+        /// <param name="self">Validation to map</param>
+        /// <param name="Success">Success map function</param>
+        /// <param name="Fail">Fail map function</param>
+        /// <returns>Mapped Validation</returns>
+        [Pure]
+        public Validation<MonoidFail, FAIL, Ret> BiMap<Ret>(Func<SUCCESS, Ret> Success, Func<FAIL, Ret> Fail) =>
+            FValidation<MonoidFail, FAIL, SUCCESS, Ret>.Inst.BiMap(this, Fail, Success);
+
+        /// <summary>
+        /// Bi-maps the value in the Validation
+        /// </summary>
+        /// <typeparam name="MonoidFail2">Monad of Fail</typeparam>
+        /// <typeparam name="FAIL2">Fail return</typeparam>
+        /// <typeparam name="SUCCESS2">Success return</typeparam>
+        /// <param name="Success">Success map function</param>
+        /// <param name="Fail">Fail map function</param>
+        /// <returns>Mapped Validation</returns>
+        [Pure]
+        public Validation<MonoidFail2, FAIL2, SUCCESS2> BiMap<MonoidFail2, FAIL2, SUCCESS2>(Func<SUCCESS, SUCCESS2> Success, Func<FAIL, FAIL2> Fail) where MonoidFail2 : struct, Monoid<FAIL2>, Eq<FAIL2> =>
+            FValidationBi<MonoidFail, FAIL, SUCCESS, MonoidFail2, FAIL2, SUCCESS2>.Inst.BiMap(this, Fail, Success);
+
+        [Pure]
+        public Validation<MonoidFail, FAIL, U> Bind<U>(Func<SUCCESS, Validation<MonoidFail, FAIL, U>> f) =>
+            IsSuccess
+                ? f(success)
+                : Validation<MonoidFail, FAIL, U>.Fail(FailValue);
+
+        /// <summary>
+        /// CompareTo override
+        /// </summary>
+        [Pure]
+        public int CompareTo(Validation<MonoidFail, FAIL, SUCCESS> other) =>
+            OrdChoice<
+                OrdDefault<FAIL>,
+                OrdDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Compare(this, other);
+
+        /// <summary>
+        /// CompareTo override
+        /// </summary>
+        [Pure]
+        public int CompareTo(SUCCESS success) =>
+            CompareTo(Success(success));
+
+        /// <summary>
+        /// CompareTo override
+        /// </summary>
+        [Pure]
+        public int CompareTo(FAIL fail) =>
+            CompareTo(Fail(fail));
+
+        /// <summary>
+        /// Counts the Validation
+        /// </summary>
+        /// <param name="self">Validation to count</param>
+        /// <returns>1 if the Validation is in a Success state, 0 otherwise.</returns>
+        [Pure]
+        public int Count() =>
+            IsFail
+                ? 0
+                : 1;
 
         [Pure]
         public Validation<MonoidFail, FAIL, SUCCESS> Disjunction<SUCCESSB>(Validation<MonoidFail, FAIL, SUCCESSB> other)
@@ -182,88 +395,151 @@ namespace LanguageExt
         }
 
         /// <summary>
-        /// Fluent matching
+        /// Impure iteration of the bound value in the structure
         /// </summary>
-        public ValidationContext<MonoidFail, FAIL, SUCCESS, Ret> Succ<Ret>(Func<SUCCESS, Ret> f) =>
-            new ValidationContext<MonoidFail, FAIL, SUCCESS, Ret>(this, f);
-
-        /// <summary>
-        /// Fluent matching
-        /// </summary>
-        public ValidationUnitContext<MonoidFail, FAIL, SUCCESS> Succ<Ret>(Action<SUCCESS> f) =>
-            new ValidationUnitContext<MonoidFail, FAIL, SUCCESS>(this, f);
-
-        /// <summary>
-        /// Invokes the `Succ` or `Fail` function depending on the state of the `Validation`
-        /// </summary>
-        /// <typeparam name="Ret">Return type</typeparam>
-        /// <param name="Succ">Function to invoke if in a `Success` state</param>
-        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
-        /// <returns>The return value of the invoked function</returns>
-        [Pure]
-        public Ret Match<Ret>(Func<SUCCESS, Ret> Succ, Func<FAIL, Ret> Fail) =>
-            Check.NullReturn(MatchUnsafe(Succ, Fail));
-
-        /// <summary>
-        /// Returns `Succ` value or invokes `Fail` function depending on the state of the `Validation`
-        /// </summary>
-        /// <typeparam name="Ret">Return type</typeparam>
-        /// <param name="Succ">Value to return if in a `Success` state</param>
-        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
-        /// <returns>The return value of the invoked function</returns>
-        [Pure]
-        public Ret Match<Ret>(Ret Succ, Func<FAIL, Ret> Fail) =>
-            Check.NullReturn(MatchUnsafe(_ => Succ, Fail));
-
-        /// <summary>
-        /// Invokes the `Succ` or `Fail` function depending on the state of the `Validation`
-        /// </summary>
-        /// <typeparam name="Ret">Return type</typeparam>
-        /// <param name="Succ">Function to invoke if in a `Success` state</param>
-        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
-        /// <returns>The return value of the invoked function</returns>
-        [Pure]
-        public Ret MatchUnsafe<Ret>(Func<SUCCESS, Ret> Succ, Func<FAIL, Ret> Fail) =>
-            IsFail
-                ? Fail == null
-                    ? throw new ArgumentNullException(nameof(Fail))
-                    : Fail(FailValue)
-                : Succ == null
-                    ? throw new ArgumentNullException(nameof(Succ))
-                    : Succ(success);
-
-        /// <summary>
-        /// Invokes the `Succ` or `Fail` action depending on the state of the `Validation`
-        /// </summary>
-        /// <param name="Succ">Action to invoke if in a `Success` state</param>
-        /// <param name="Fail">Action to invoke if in a `Fail` state</param>
-        /// <returns>Unit</returns>
-        public Unit Match(Action<SUCCESS> Succ, Action<FAIL> Fail)
+        /// <returns>
+        /// Returns the original unmodified structure
+        /// </returns>
+        public Validation<MonoidFail, FAIL, SUCCESS> Do(Action<SUCCESS> f)
         {
-            if (IsFail)
-            {
-                Fail(FailValue);
-            }
-            else 
-            {
-                Succ(success);
-            }
-            return unit;
+            Iter(f);
+            return this;
         }
 
         /// <summary>
-        /// Match the two states of the Validation and return a promise for a non-null R2.
+        /// Equality check
         /// </summary>
-        /// <returns>A promise to return a non-null R2</returns>
-        public async Task<R2> MatchAsync<R2>(Func<SUCCESS, Task<R2>> SuccAsync, Func<FAIL, R2> Fail) =>
-            await Match(SuccAsync, f => Fail(f).AsTask());
+        /// <param name="obj">Object to test for equality</param>
+        /// <returns>True if equal</returns>
+        [Pure]
+        public override bool Equals(object obj) =>
+            !ReferenceEquals(obj, null) &&
+            obj is Validation<MonoidFail, FAIL, SUCCESS> &&
+            EqChoice<
+                MonoidFail,
+                EqDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Equals(this, (Validation<MonoidFail, FAIL, SUCCESS>)obj);
 
         /// <summary>
-        /// Match the two states of the Validation and return a promise for a non-null R2.
+        /// Equality override
         /// </summary>
-        /// <returns>A promise to return a non-null R2</returns>
-        public async Task<R2> MatchAsync<R2>(Func<SUCCESS, Task<R2>> SuccAsync, Func<FAIL, Task<R2>> FailAsync) =>
-            await Match(SuccAsync, FailAsync);
+        [Pure]
+        public bool Equals(SUCCESS success) =>
+            Equals(Success(success));
+
+        /// <summary>
+        /// Equality override
+        /// </summary>
+        [Pure]
+        public bool Equals(FAIL fail) =>
+            Equals(Fail(fail));
+
+        /// <summary>
+        /// Equality override
+        /// </summary>
+        [Pure]
+        public bool Equals(Validation<MonoidFail, FAIL, SUCCESS> other) =>
+            EqChoice<
+                MonoidFail,
+                EqDefault<SUCCESS>,
+                FoldValidation<MonoidFail, FAIL, SUCCESS>,
+                Validation<MonoidFail, FAIL, SUCCESS>,
+                FAIL, SUCCESS>
+               .Inst.Equals(this, other);
+
+        /// <summary>
+        /// Invokes a predicate on the value of the Validation if it's in the Success state
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <param name="self">Validation to check existence of</param>
+        /// <param name="pred">Predicate</param>
+        /// <returns>True if the Validation is in a Success state and the predicate returns True.  False otherwise.</returns>
+        [Pure]
+        public bool Exists(Func<SUCCESS, bool> pred) =>
+            exists<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, pred);
+
+        /// <summary>
+        /// Project the Validation fail into a Seq
+        /// </summary>
+        [Pure]
+        public Seq<FAIL> FailAsEnumerable() =>
+            leftAsEnumerable<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+
+        /// <summary>
+        /// Project the Validation into an immutable array R
+        /// </summary>
+        [Pure]
+        public Arr<FAIL> FailToArray() =>
+            leftToArray<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+
+        /// <summary>
+        /// Project the Validation into a Lst
+        /// </summary>
+        [Pure]
+        public Lst<FAIL> FailToList() =>
+            leftToList<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+
+        /// <summary>
+        /// Convert Validation to sequence of 0 or 1 success values
+        /// </summary>
+        [Pure]
+        public Seq<FAIL> FailToSeq() =>
+            FailAsEnumerable();
+
+        /// <summary>
+        /// <para>
+        /// Validation types are like lists of 0 or 1 items, and therefore follow the
+        /// same rules when folding.
+        /// </para><para>
+        /// In the case of lists, 'Fold', when applied to a binary
+        /// operator, a starting value(typically the Fail-identity of the operator),
+        /// and a list, reduces the list using the binary operator, from Fail to
+        /// Success:
+        /// </para>
+        /// </summary>
+        /// <typeparam name="S">Aggregate state type</typeparam>
+        /// <param name="state">Initial state</param>
+        /// <param name="Success">Folder function, applied if structure is in a Success state</param>
+        /// <returns>The aggregate state</returns>
+        [Pure]
+        public S Fold<S>(S state, Func<S, SUCCESS, S> Success) =>
+            default(FoldValidation<MonoidFail, FAIL, SUCCESS>).Fold(this, state, Success)(unit);
+
+        /// <summary>
+        /// Invokes a predicate on the value of the Validation if it's in the Success state
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <param name="self">Validation to forall</param>
+        /// <param name="Success">Predicate</param>
+        /// <returns>True if the Validation is in a Fail state.
+        /// True if the Validation is in a Success state and the predicate returns True.
+        /// False otherwise.</returns>
+        [Pure]
+        public bool ForAll(Func<SUCCESS, bool> Success) =>
+            forall<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, Success);
+
+        public IEnumerator<ValidationData<MonoidFail, FAIL, SUCCESS>> GetEnumerator() =>
+            Enum().GetEnumerator();
+
+        /// <summary>
+        /// Returns a hash code of the wrapped value of the Validation
+        /// </summary>
+        /// <returns>Hash code</returns>
+        [Pure]
+        public override int GetHashCode() =>
+            hashCode<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("State", state);
+            if (IsSuccess) info.AddValue("Success", SuccessValue);
+            if (IsFail) info.AddValue("Fail", FailValue);
+        }
 
         /// <summary>
         /// Executes the Fail function if the Validation is in a Fail state.
@@ -342,49 +618,148 @@ namespace LanguageExt
             ifRight<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, SuccessMap);
 
         /// <summary>
-        /// Return a string representation of the Validation
+        /// Iterate the Validation
+        /// action is invoked if in the Success state
         /// </summary>
-        /// <returns>String representation of the Validation</returns>
-        [Pure]
-        public override string ToString() =>
-            IsSuccess
-                ? isnull(success)
-                    ? "Success(null)"
-                    : $"Success({success})"
-                : $"Fail({FailValue})";
+        public Unit Iter(Action<SUCCESS> Success) =>
+            iter<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, Success);
 
         /// <summary>
-        /// Returns a hash code of the wrapped value of the Validation
+        /// Maps the value in the Validation if it's in a Success state
         /// </summary>
-        /// <returns>Hash code</returns>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="R">Success</typeparam>
+        /// <typeparam name="Ret">Mapped Validation type</typeparam>
+        /// <param name="self">Validation to map</param>
+        /// <param name="mapper">Map function</param>
+        /// <returns>Mapped Validation</returns>
         [Pure]
-        public override int GetHashCode() =>
-            hashCode<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+        public Validation<MonoidFail, FAIL, Ret> Map<Ret>(Func<SUCCESS, Ret> mapper) =>
+            FValidation<MonoidFail, FAIL, SUCCESS, Ret>.Inst.Map(this, mapper);
 
         /// <summary>
-        /// Equality check
+        /// Maps the value in the Validation if it's in a Fail state
         /// </summary>
-        /// <param name="obj">Object to test for equality</param>
-        /// <returns>True if equal</returns>
+        /// <typeparam name="MonoidRet">Monad of Fail</typeparam>
+        /// <typeparam name="Ret">Fail return</typeparam>
+        /// <param name="Fail">Fail map function</param>
+        /// <returns>Mapped Validation</returns>
         [Pure]
-        public override bool Equals(object obj) =>
-            !ReferenceEquals(obj, null) &&
-            obj is Validation<MonoidFail, FAIL, SUCCESS> &&
-            EqChoice<
-                MonoidFail, 
-                EqDefault<SUCCESS>, 
-                FoldValidation<MonoidFail, FAIL, SUCCESS>, 
-                Validation<MonoidFail, FAIL, SUCCESS>, 
-                FAIL, SUCCESS>
-               .Inst.Equals(this, (Validation<MonoidFail, FAIL, SUCCESS>)obj);
-
+        public Validation<MonoidRet, Ret, SUCCESS> MapFail<MonoidRet, Ret>(Func<FAIL, Ret> Fail) where MonoidRet : struct, Monoid<Ret>, Eq<Ret> =>
+            FValidationBi<MonoidFail, FAIL, SUCCESS, MonoidRet, Ret, SUCCESS>.Inst.BiMap(this, Fail, identity);
 
         /// <summary>
-        /// Project the Validation into a Lst
+        /// Invokes the `Succ` or `Fail` function depending on the state of the `Validation`
+        /// </summary>
+        /// <typeparam name="Ret">Return type</typeparam>
+        /// <param name="Succ">Function to invoke if in a `Success` state</param>
+        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
+        /// <returns>The return value of the invoked function</returns>
+        [Pure]
+        public Ret Match<Ret>(Func<SUCCESS, Ret> Succ, Func<FAIL, Ret> Fail) =>
+            Check.NullReturn(MatchUnsafe(Succ, Fail));
+
+        /// <summary>
+        /// Returns `Succ` value or invokes `Fail` function depending on the state of the `Validation`
+        /// </summary>
+        /// <typeparam name="Ret">Return type</typeparam>
+        /// <param name="Succ">Value to return if in a `Success` state</param>
+        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
+        /// <returns>The return value of the invoked function</returns>
+        [Pure]
+        public Ret Match<Ret>(Ret Succ, Func<FAIL, Ret> Fail) =>
+            Check.NullReturn(MatchUnsafe(_ => Succ, Fail));
+
+        /// <summary>
+        /// Invokes the `Succ` or `Fail` action depending on the state of the `Validation`
+        /// </summary>
+        /// <param name="Succ">Action to invoke if in a `Success` state</param>
+        /// <param name="Fail">Action to invoke if in a `Fail` state</param>
+        /// <returns>Unit</returns>
+        public Unit Match(Action<SUCCESS> Succ, Action<FAIL> Fail)
+        {
+            if (IsFail)
+            {
+                Fail(FailValue);
+            }
+            else
+            {
+                Succ(success);
+            }
+            return unit;
+        }
+
+        /// <summary>
+        /// Match the two states of the Validation and return a promise for a non-null R2.
+        /// </summary>
+        /// <returns>A promise to return a non-null R2</returns>
+        public async Task<R2> MatchAsync<R2>(Func<SUCCESS, Task<R2>> SuccAsync, Func<FAIL, R2> Fail) =>
+            await Match(SuccAsync, f => Fail(f).AsTask());
+
+        /// <summary>
+        /// Match the two states of the Validation and return a promise for a non-null R2.
+        /// </summary>
+        /// <returns>A promise to return a non-null R2</returns>
+        public async Task<R2> MatchAsync<R2>(Func<SUCCESS, Task<R2>> SuccAsync, Func<FAIL, Task<R2>> FailAsync) =>
+            await Match(SuccAsync, FailAsync);
+
+        /// <summary>
+        /// Invokes the `Succ` or `Fail` function depending on the state of the `Validation`
+        /// </summary>
+        /// <typeparam name="Ret">Return type</typeparam>
+        /// <param name="Succ">Function to invoke if in a `Success` state</param>
+        /// <param name="Fail">Function to invoke if in a `Fail` state</param>
+        /// <returns>The return value of the invoked function</returns>
+        [Pure]
+        public Ret MatchUnsafe<Ret>(Func<SUCCESS, Ret> Succ, Func<FAIL, Ret> Fail) =>
+            IsFail
+                ? Fail == null
+                    ? throw new ArgumentNullException(nameof(Fail))
+                    : Fail(FailValue)
+                : Succ == null
+                    ? throw new ArgumentNullException(nameof(Succ))
+                    : Succ(success);
+
+        /// <summary>
+        /// Maps the value in the Validation if it's in a Success state
+        /// </summary>
+        /// <typeparam name="L">Fail</typeparam>
+        /// <typeparam name="TR">Success</typeparam>
+        /// <typeparam name="UR">Mapped Validation type</typeparam>
+        /// <param name="self">Validation to map</param>
+        /// <param name="map">Map function</param>
+        /// <returns>Mapped Validation</returns>
+        [Pure]
+        public Validation<MonoidFail, FAIL, U> Select<U>(Func<SUCCESS, U> map) =>
+            FValidation<MonoidFail, FAIL, SUCCESS, U>.Inst.Map(this, map);
+
+        [Pure]
+        public Validation<MonoidFail, FAIL, V> SelectMany<U, V>(Func<SUCCESS, Validation<MonoidFail, FAIL, U>> bind, Func<SUCCESS, U, V> project)
+        {
+            var t = success;
+            return IsSuccess
+                ? bind(t).Map(u => project(t, u))
+                : Validation<MonoidFail, FAIL, V>.Fail(FailValue);
+        }
+
+        /// <summary>
+        /// Fluent matching
+        /// </summary>
+        public ValidationContext<MonoidFail, FAIL, SUCCESS, Ret> Succ<Ret>(Func<SUCCESS, Ret> f) =>
+            new ValidationContext<MonoidFail, FAIL, SUCCESS, Ret>(this, f);
+
+        /// <summary>
+        /// Fluent matching
+        /// </summary>
+        public ValidationUnitContext<MonoidFail, FAIL, SUCCESS> Succ<Ret>(Action<SUCCESS> f) =>
+            new ValidationUnitContext<MonoidFail, FAIL, SUCCESS>(this, f);
+
+        /// <summary>
+        /// Project the Validation success into a Seq
         /// </summary>
         [Pure]
-        public Lst<SUCCESS> SuccessToList() =>
-            rightToList<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+        public Seq<SUCCESS> SuccessAsEnumerable() =>
+            rightAsEnumerable<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
 
         /// <summary>
         /// Project the Validation into an immutable array
@@ -397,22 +772,8 @@ namespace LanguageExt
         /// Project the Validation into a Lst
         /// </summary>
         [Pure]
-        public Lst<FAIL> FailToList() =>
-            leftToList<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
-
-        /// <summary>
-        /// Project the Validation into an immutable array R
-        /// </summary>
-        [Pure]
-        public Arr<FAIL> FailToArray() =>
-            leftToArray<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
-
-        /// <summary>
-        /// Convert Validation to sequence of 0 or 1 right values
-        /// </summary>
-        [Pure]
-        public Seq<SUCCESS> ToSeq() =>
-            SuccessAsEnumerable();
+        public Lst<SUCCESS> SuccessToList() =>
+            rightToList<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
 
         /// <summary>
         /// Convert Validation to sequence of 0 or 1 success values
@@ -420,34 +781,6 @@ namespace LanguageExt
         [Pure]
         public Seq<SUCCESS> SuccessToSeq() =>
             SuccessAsEnumerable();
-
-        /// <summary>
-        /// Convert Validation to sequence of 0 or 1 success values
-        /// </summary>
-        [Pure]
-        public Seq<FAIL> FailToSeq() =>
-            FailAsEnumerable();
-
-        /// <summary>
-        /// Project the Validation success into a Seq
-        /// </summary>
-        [Pure]
-        public Seq<SUCCESS> SuccessAsEnumerable() =>
-            rightAsEnumerable<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
-
-        /// <summary>
-        /// Project the Validation fail into a Seq
-        /// </summary>
-        [Pure]
-        public Seq<FAIL> FailAsEnumerable() =>
-            leftAsEnumerable<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
-
-        /// <summary>
-        /// Convert the Validation to an Option
-        /// </summary>
-        [Pure]
-        public Option<SUCCESS> ToOption() =>
-            toOption<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
 
         /// <summary>
         /// Convert the Validation to an EitherUnsafe
@@ -464,90 +797,37 @@ namespace LanguageExt
             toEitherUnsafe<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
 
         /// <summary>
+        /// Convert the Validation to an Option
+        /// </summary>
+        [Pure]
+        public Option<SUCCESS> ToOption() =>
+            toOption<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
+
+        /// <summary>
+        /// Convert Validation to sequence of 0 or 1 right values
+        /// </summary>
+        [Pure]
+        public Seq<SUCCESS> ToSeq() =>
+            SuccessAsEnumerable();
+
+        /// <summary>
+        /// Return a string representation of the Validation
+        /// </summary>
+        /// <returns>String representation of the Validation</returns>
+        [Pure]
+        public override string ToString() =>
+            IsSuccess
+                ? isnull(success)
+                    ? "Success(null)"
+                    : $"Success({success})"
+                : $"Fail({FailValue})";
+
+        /// <summary>
         /// Convert the Validation to an TryOption
         /// </summary>
         [Pure]
         public TryOption<SUCCESS> ToTryOption() =>
             toTryOption<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this);
-
-
-        /// <summary>
-        /// Comparison operator
-        /// </summary>
-        /// <param name="lhs">The left hand side of the operation</param>
-        /// <param name="rhs">The right hand side of the operation</param>
-        /// <returns>True if lhs < rhs</returns>
-        [Pure]
-        public static bool operator <(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            OrdChoice<
-                OrdDefault<FAIL>, 
-                OrdDefault<SUCCESS>, 
-                FoldValidation<MonoidFail, FAIL, SUCCESS>, 
-                Validation<MonoidFail, FAIL, SUCCESS>, 
-                FAIL, SUCCESS>
-               .Inst.Compare(lhs, rhs) < 0;
-
-        /// <summary>
-        /// Comparison operator
-        /// </summary>
-        /// <param name="lhs">The left hand side of the operation</param>
-        /// <param name="rhs">The right hand side of the operation</param>
-        /// <returns>True if lhs <= rhs</returns>
-        [Pure]
-        public static bool operator <=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            OrdChoice<
-                OrdDefault<FAIL>,
-                OrdDefault<SUCCESS>,
-                FoldValidation<MonoidFail, FAIL, SUCCESS>,
-                Validation<MonoidFail, FAIL, SUCCESS>,
-                FAIL, SUCCESS>
-               .Inst.Compare(lhs, rhs) <= 0;
-
-        /// <summary>
-        /// Comparison operator
-        /// </summary>
-        /// <param name="lhs">The left hand side of the operation</param>
-        /// <param name="rhs">The right hand side of the operation</param>
-        /// <returns>True if lhs > rhs</returns>
-        [Pure]
-        public static bool operator >(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            OrdChoice<
-                OrdDefault<FAIL>,
-                OrdDefault<SUCCESS>,
-                FoldValidation<MonoidFail, FAIL, SUCCESS>,
-                Validation<MonoidFail, FAIL, SUCCESS>,
-                FAIL, SUCCESS>
-               .Inst.Compare(lhs, rhs) > 0;
-
-        /// <summary>
-        /// Comparison operator
-        /// </summary>
-        /// <param name="lhs">The left hand side of the operation</param>
-        /// <param name="rhs">The right hand side of the operation</param>
-        /// <returns>True if lhs >= rhs</returns>
-        [Pure]
-        public static bool operator >=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            OrdChoice<
-                OrdDefault<FAIL>,
-                OrdDefault<SUCCESS>,
-                FoldValidation<MonoidFail, FAIL, SUCCESS>,
-                Validation<MonoidFail, FAIL, SUCCESS>,
-                FAIL, SUCCESS>
-               .Inst.Compare(lhs, rhs) >= 0;
-
-        /// <summary>
-        /// Equality operator override
-        /// </summary>
-        [Pure]
-        public static bool operator ==(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            lhs.Equals(rhs);
-
-        /// <summary>
-        /// Non-equality operator override
-        /// </summary>
-        [Pure]
-        public static bool operator !=(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
-            !(lhs == rhs);
 
         /// <summary>
         /// Coalescing operator
@@ -556,290 +836,8 @@ namespace LanguageExt
         public static Validation<MonoidFail, FAIL, SUCCESS> operator |(Validation<MonoidFail, FAIL, SUCCESS> lhs, Validation<MonoidFail, FAIL, SUCCESS> rhs) =>
             default(FoldValidation<MonoidFail, FAIL, SUCCESS>).Append(lhs, rhs);
 
-        /// <summary>
-        /// Override of the True operator to return True if the Validation is Success
-        /// </summary>
-        [Pure]
-        public static bool operator true(Validation<MonoidFail, FAIL, SUCCESS> value) =>
-            value.IsSuccess;
-
-        /// <summary>
-        /// Override of the False operator to return True if the Validation is Fail
-        /// </summary>
-        [Pure]
-        public static bool operator false(Validation<MonoidFail, FAIL, SUCCESS> value) =>
-            value.IsFail;
-
-        /// <summary>
-        /// CompareTo override
-        /// </summary>
-        [Pure]
-        public int CompareTo(Validation<MonoidFail, FAIL, SUCCESS> other) =>
-            OrdChoice<
-                OrdDefault<FAIL>,
-                OrdDefault<SUCCESS>,
-                FoldValidation<MonoidFail, FAIL, SUCCESS>,
-                Validation<MonoidFail, FAIL, SUCCESS>,
-                FAIL, SUCCESS>
-               .Inst.Compare(this, other);
-
-        /// <summary>
-        /// CompareTo override
-        /// </summary>
-        [Pure]
-        public int CompareTo(SUCCESS success) =>
-            CompareTo(Success(success));
-
-        /// <summary>
-        /// CompareTo override
-        /// </summary>
-        [Pure]
-        public int CompareTo(FAIL fail) =>
-            CompareTo(Fail(fail));
-
-        /// <summary>
-        /// Equality override
-        /// </summary>
-        [Pure]
-        public bool Equals(SUCCESS success) =>
-            Equals(Success(success));
-
-        /// <summary>
-        /// Equality override
-        /// </summary>
-        [Pure]
-        public bool Equals(FAIL fail) =>
-            Equals(Fail(fail));
-
-        /// <summary>
-        /// Equality override
-        /// </summary>
-        [Pure]
-        public bool Equals(Validation<MonoidFail, FAIL, SUCCESS> other) =>
-            EqChoice<
-                MonoidFail, 
-                EqDefault<SUCCESS>, 
-                FoldValidation<MonoidFail, FAIL, SUCCESS>, 
-                Validation<MonoidFail, FAIL, SUCCESS>, 
-                FAIL, SUCCESS>
-               .Inst.Equals(this, other);
-
-
-
-        /// <summary>
-        /// Counts the Validation
-        /// </summary>
-        /// <param name="self">Validation to count</param>
-        /// <returns>1 if the Validation is in a Success state, 0 otherwise.</returns>
-        [Pure]
-        public int Count() =>
-            IsFail
-                ? 0
-                : 1;
-
-        /// <summary>
-        /// Iterate the Validation
-        /// action is invoked if in the Success state
-        /// </summary>
-        public Unit Iter(Action<SUCCESS> Success) =>
-            iter<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, Success);
-
-        /// <summary>
-        /// Iterate the Validation
-        /// action is invoked if in the Success state
-        /// </summary>
-        public Unit BiIter(Action<SUCCESS> Success, Action<FAIL> Fail) =>
-            biIter<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
-
-        /// <summary>
-        /// Invokes a predicate on the value of the Validation if it's in the Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <param name="self">Validation to forall</param>
-        /// <param name="Success">Predicate</param>
-        /// <returns>True if the Validation is in a Fail state.  
-        /// True if the Validation is in a Success state and the predicate returns True.  
-        /// False otherwise.</returns>
-        [Pure]
-        public bool ForAll(Func<SUCCESS, bool> Success) =>
-            forall<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, Success);
-
-        /// <summary>
-        /// Invokes a predicate on the value of the Validation if it's in the Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <param name="self">Validation to forall</param>
-        /// <param name="Success">Predicate</param>
-        /// <param name="Fail">Predicate</param>
-        /// <returns>True if Validation Predicate returns true</returns>
-        [Pure]
-        public bool BiForAll(Func<SUCCESS, bool> Success, Func<FAIL, bool> Fail) =>
-            biForAll<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
-
-        /// <summary>
-        /// <para>
-        /// Validation types are like lists of 0 or 1 items, and therefore follow the 
-        /// same rules when folding.
-        /// </para><para>
-        /// In the case of lists, 'Fold', when applied to a binary
-        /// operator, a starting value(typically the Fail-identity of the operator),
-        /// and a list, reduces the list using the binary operator, from Fail to
-        /// Success:
-        /// </para>
-        /// </summary>
-        /// <typeparam name="S">Aggregate state type</typeparam>
-        /// <param name="state">Initial state</param>
-        /// <param name="Success">Folder function, applied if structure is in a Success state</param>
-        /// <returns>The aggregate state</returns>
-        [Pure]
-        public S Fold<S>(S state, Func<S, SUCCESS, S> Success) =>
-            default(FoldValidation<MonoidFail, FAIL, SUCCESS>).Fold(this, state, Success)(unit);
-
-        /// <summary>
-        /// <para>
-        /// Validation types are like lists of 0 or 1 items, and therefore follow the 
-        /// same rules when folding.
-        /// </para><para>
-        /// In the case of lists, 'Fold', when applied to a binary
-        /// operator, a starting value(typically the Fail-identity of the operator),
-        /// and a list, reduces the list using the binary operator, from Fail to
-        /// Success:
-        /// </para>
-        /// </summary>
-        /// <typeparam name="S">Aggregate state type</typeparam>
-        /// <param name="state">Initial state</param>
-        /// <param name="Success">Folder function, applied if Validation is in a Success state</param>
-        /// <param name="Fail">Folder function, applied if Validation is in a Fail state</param>
-        /// <returns>The aggregate state</returns>
-        [Pure]
-        public S BiFold<S>(S state, Func<S, SUCCESS, S> Success, Func<S, FAIL, S> Fail) =>
-            default(FoldValidation<MonoidFail, FAIL, SUCCESS>).BiFold(this, state, Fail, Success);
-
-        /// <summary>
-        /// Invokes a predicate on the value of the Validation if it's in the Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <param name="self">Validation to check existence of</param>
-        /// <param name="pred">Predicate</param>
-        /// <returns>True if the Validation is in a Success state and the predicate returns True.  False otherwise.</returns>
-        [Pure]
-        public bool Exists(Func<SUCCESS, bool> pred) =>
-            exists<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>(this, pred);
-
-        /// <summary>
-        /// Invokes a predicate on the value of the Validation
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <param name="self">Validation to check existence of</param>
-        /// <param name="Success">Success predicate</param>
-        /// <param name="Fail">Fail predicate</param>
-        [Pure]
-        public bool BiExists(Func<SUCCESS, bool> Success, Func<FAIL, bool> Fail) =>
-            biExists<FoldValidation<MonoidFail, FAIL, SUCCESS>, Validation<MonoidFail, FAIL, SUCCESS>, FAIL, SUCCESS>(this, Fail, Success);
-
-        /// <summary>
-        /// Impure iteration of the bound value in the structure
-        /// </summary>
-        /// <returns>
-        /// Returns the original unmodified structure
-        /// </returns>
-        public Validation<MonoidFail, FAIL, SUCCESS> Do(Action<SUCCESS> f)
-        {
-            Iter(f);
-            return this;
-        }
-
-        /// <summary>
-        /// Maps the value in the Validation if it's in a Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <typeparam name="Ret">Mapped Validation type</typeparam>
-        /// <param name="self">Validation to map</param>
-        /// <param name="mapper">Map function</param>
-        /// <returns>Mapped Validation</returns>
-        [Pure]
-        public Validation<MonoidFail, FAIL, Ret> Map<Ret>(Func<SUCCESS, Ret> mapper) =>
-            FValidation<MonoidFail, FAIL, SUCCESS, Ret>.Inst.Map(this, mapper);
-
-        /// <summary>
-        /// Bi-maps the value in the Validation if it's in a Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="R">Success</typeparam>
-        /// <typeparam name="RRet">Success return</typeparam>
-        /// <param name="self">Validation to map</param>
-        /// <param name="Success">Success map function</param>
-        /// <param name="Fail">Fail map function</param>
-        /// <returns>Mapped Validation</returns>
-        [Pure]
-        public Validation<MonoidFail, FAIL, Ret> BiMap<Ret>(Func<SUCCESS, Ret> Success, Func<FAIL, Ret> Fail) =>
-            FValidation<MonoidFail, FAIL, SUCCESS, Ret>.Inst.BiMap(this, Fail, Success);
-
-        /// <summary>
-        /// Maps the value in the Validation if it's in a Fail state
-        /// </summary>
-        /// <typeparam name="MonoidRet">Monad of Fail</typeparam>
-        /// <typeparam name="Ret">Fail return</typeparam>
-        /// <param name="Fail">Fail map function</param>
-        /// <returns>Mapped Validation</returns>
-        [Pure]
-        public Validation<MonoidRet, Ret, SUCCESS> MapFail<MonoidRet, Ret>(Func<FAIL, Ret> Fail) where MonoidRet : struct, Monoid<Ret>, Eq<Ret> =>
-            FValidationBi<MonoidFail, FAIL, SUCCESS, MonoidRet, Ret, SUCCESS>.Inst.BiMap(this, Fail, identity);
-
-        /// <summary>
-        /// Bi-maps the value in the Validation
-        /// </summary>
-        /// <typeparam name="MonoidFail2">Monad of Fail</typeparam>
-        /// <typeparam name="FAIL2">Fail return</typeparam>
-        /// <typeparam name="SUCCESS2">Success return</typeparam>
-        /// <param name="Success">Success map function</param>
-        /// <param name="Fail">Fail map function</param>
-        /// <returns>Mapped Validation</returns>
-        [Pure]
-        public Validation<MonoidFail2, FAIL2, SUCCESS2> BiMap<MonoidFail2, FAIL2, SUCCESS2>(Func<SUCCESS, SUCCESS2> Success, Func<FAIL, FAIL2> Fail) where MonoidFail2 : struct, Monoid<FAIL2>, Eq<FAIL2> =>
-            FValidationBi<MonoidFail, FAIL, SUCCESS, MonoidFail2, FAIL2, SUCCESS2>.Inst.BiMap(this, Fail, Success);
-
-        /// <summary>
-        /// Maps the value in the Validation if it's in a Success state
-        /// </summary>
-        /// <typeparam name="L">Fail</typeparam>
-        /// <typeparam name="TR">Success</typeparam>
-        /// <typeparam name="UR">Mapped Validation type</typeparam>
-        /// <param name="self">Validation to map</param>
-        /// <param name="map">Map function</param>
-        /// <returns>Mapped Validation</returns>
-        [Pure]
-        public Validation<MonoidFail, FAIL, U> Select<U>(Func<SUCCESS, U> map) =>
-            FValidation<MonoidFail, FAIL, SUCCESS, U>.Inst.Map(this, map);
-
-        [Pure]
-        public Validation<MonoidFail, FAIL, U> Bind<U>(Func<SUCCESS, Validation<MonoidFail, FAIL, U>> f) =>
-            IsSuccess
-                ? f(success)
-                : Validation<MonoidFail, FAIL, U>.Fail(FailValue);
-
-        /// <summary>
-        /// Bi-bind.  Allows mapping of both monad states
-        /// </summary>
-        [Pure]
-        public Validation<MonoidFail, FAIL, B> BiBind<B>(Func<SUCCESS, Validation<MonoidFail, FAIL, B>> Succ, Func<FAIL, Validation<MonoidFail, FAIL, B>> Fail) =>
-            IsSuccess
-                ? Succ(SuccessValue)
-                : Fail(FailValue);
-
-        [Pure]
-        public Validation<MonoidFail, FAIL, V> SelectMany<U, V>(Func<SUCCESS, Validation<MonoidFail, FAIL, U>> bind, Func<SUCCESS, U, V> project)
-        {
-            var t = success;
-            return IsSuccess
-                ? bind(t).Map(u => project(t, u))
-                : Validation<MonoidFail, FAIL, V>.Fail(FailValue);
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+                                                                                                                                                                                                                                                                            Enum().GetEnumerator();
     }
 
     /// <summary>
@@ -848,8 +846,8 @@ namespace LanguageExt
     public struct ValidationContext<MonoidFail, FAIL, SUCCESS, Ret>
         where MonoidFail : struct, Monoid<FAIL>, Eq<FAIL>
     {
-        readonly Validation<MonoidFail, FAIL, SUCCESS> validation;
-        readonly Func<SUCCESS, Ret> success;
+        private readonly Func<SUCCESS, Ret> success;
+        private readonly Validation<MonoidFail, FAIL, SUCCESS> validation;
 
         internal ValidationContext(Validation<MonoidFail, FAIL, SUCCESS> validation, Func<SUCCESS, Ret> success)
         {
@@ -873,8 +871,8 @@ namespace LanguageExt
     public struct ValidationUnitContext<MonoidFail, FAIL, SUCCESS>
         where MonoidFail : struct, Monoid<FAIL>, Eq<FAIL>
     {
-        readonly Validation<MonoidFail, FAIL, SUCCESS> validation;
-        readonly Action<SUCCESS> success;
+        private readonly Action<SUCCESS> success;
+        private readonly Validation<MonoidFail, FAIL, SUCCESS> validation;
 
         internal ValidationUnitContext(Validation<MonoidFail, FAIL, SUCCESS> validation, Action<SUCCESS> success)
         {

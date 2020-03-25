@@ -14,7 +14,7 @@ namespace LanguageExt.ClassInstances
         Monad<Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>
         where MonoidFail : struct, Monoid<FAIL>, Eq<FAIL>
     {
-        public static readonly MValidation<MonoidFail, FAIL, SUCCESS> Inst = default(MValidation<MonoidFail, FAIL, SUCCESS>);
+        public static readonly MValidation<MonoidFail, FAIL, SUCCESS> Inst = default;
 
         [Pure]
         public Validation<MonoidFail, FAIL, SUCCESS> Append(Validation<MonoidFail, FAIL, SUCCESS> x, Validation<MonoidFail, FAIL, SUCCESS> y) =>

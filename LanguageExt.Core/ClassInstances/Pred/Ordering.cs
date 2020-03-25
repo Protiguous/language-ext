@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances.Pred
         where ORD : struct, Ord<A>
         where CONST : struct, Const<A>
     {
-        public static readonly GreaterThan<ORD, A, CONST> Is = default(GreaterThan<ORD, A, CONST>);
+        public static readonly GreaterThan<ORD, A, CONST> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -23,7 +23,7 @@ namespace LanguageExt.ClassInstances.Pred
         where ORD : struct, Ord<A>
         where CONST : struct, Const<A>
     {
-        public static readonly LessThan<ORD, A, CONST> Is = default(LessThan<ORD, A, CONST>);
+        public static readonly LessThan<ORD, A, CONST> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -34,7 +34,7 @@ namespace LanguageExt.ClassInstances.Pred
         where ORD : struct, Ord<A>
         where CONST : struct, Const<A>
     {
-        public static readonly GreaterOrEq<ORD, A, CONST> Is = default(GreaterOrEq<ORD, A, CONST>);
+        public static readonly GreaterOrEq<ORD, A, CONST> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -45,7 +45,7 @@ namespace LanguageExt.ClassInstances.Pred
         where ORD   : struct, Ord<A>
         where CONST : struct, Const<A>
     {
-        public static readonly LessOrEq<ORD, A, CONST> Is = default(LessOrEq<ORD, A, CONST>);
+        public static readonly LessOrEq<ORD, A, CONST> Is = default;
 
         [Pure]
         public bool True(A value) =>

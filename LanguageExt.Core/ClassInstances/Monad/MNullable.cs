@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         Ord<A?>
         where A : struct
     {
-        public static readonly MNullable<A> Inst = default(MNullable<A>);
+        public static readonly MNullable<A> Inst = default;
 
         [Pure]
         public A? None => (A?)null;

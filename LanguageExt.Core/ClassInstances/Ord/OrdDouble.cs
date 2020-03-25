@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdDouble : Ord<double>
     {
-        public static readonly OrdDouble Inst = default(OrdDouble);
+        public static readonly OrdDouble Inst = default;
 
         /// <summary>
         /// Equality test

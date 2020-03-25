@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdShort : Ord<short>
     {
-        public static readonly OrdShort Inst = default(OrdShort);
+        public static readonly OrdShort Inst = default;
 
         /// <summary>
         /// Equality test

@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         BiFoldable<Try<A>, A, Unit>,
         AsyncPair<Try<A>, TryAsync<A>>
     {
-        public static readonly MTry<A> Inst = default(MTry<A>);
+        public static readonly MTry<A> Inst = default;
 
         static Try<A> none = () => new Result<A>(BottomException.Default);
 

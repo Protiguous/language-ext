@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
         BiFoldable<OptionUnsafe<A>, A, Unit>,
         Eq<OptionUnsafe<A>>
     {
-        public static readonly MOptionUnsafe<A> Inst = default(MOptionUnsafe<A>);
+        public static readonly MOptionUnsafe<A> Inst = default;
 
         [Pure]
         public OptionUnsafe<A> None => OptionUnsafe<A>.None;

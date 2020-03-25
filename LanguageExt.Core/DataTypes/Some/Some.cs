@@ -33,12 +33,24 @@ namespace LanguageExt
     }
 
     [Serializable]
-    public struct Some<A> : 
+    public struct Some<A> :
         IEnumerable<A>,
         IOptional
     {
-        readonly A value;
-        readonly bool initialised;
+        private readonly bool initialised;
+        private readonly A value;
+
+        [Pure]
+        public bool IsNone =>
+            !initialised;
+
+        [Pure]
+        public bool IsSome =>
+            initialised;
+
+        [Pure]
+        public A Value =>
+            CheckInitialised(value);
 
         public Some(A value)
         {
@@ -59,14 +71,26 @@ namespace LanguageExt
             initialised = first.Length == 1;
             this.value = initialised
                 ? first[0]
-                : default(A);
+                : default;
         }
 
         [Pure]
-        public Seq<A> ToSeq() =>
+        private U CheckInitialised<U>(U value) =>
             initialised
-                ? Seq1(value)
-                : Empty;
+                ? value
+                : raise<U>(new SomeNotInitialisedException(typeof(A)));
+
+        [Pure]
+        public static implicit operator A(Some<A> value) =>
+            value.Value;
+
+        [Pure]
+        public static implicit operator Option<A>(Some<A> value) =>
+            default(MOption<A>).Return(value.Value);
+
+        [Pure]
+        public static implicit operator Some<A>(A value) =>
+            new Some<A>(value);
 
         [Pure]
         public IEnumerable<A> AsEnumerable() =>
@@ -75,54 +99,20 @@ namespace LanguageExt
                 : new A[0];
 
         [Pure]
+        public override bool Equals(object obj) =>
+            Value.Equals(obj);
+
+        [Pure]
         public IEnumerator<A> GetEnumerator() =>
             AsEnumerable().GetEnumerator();
-
-        [Pure]
-        IEnumerator IEnumerable.GetEnumerator() =>
-            AsEnumerable().GetEnumerator();
-
-        [Pure]
-        public A Value => 
-            CheckInitialised(value);
-
-        [Pure]
-        private U CheckInitialised<U>(U value) =>
-            initialised
-                ? value
-                : raise<U>( new SomeNotInitialisedException(typeof(A)) );
-
-        [Pure]
-        public static implicit operator Option<A>(Some<A> value) =>
-            default(MOption<A>).Return(value.Value);
-
-        [Pure]
-        public static implicit operator Some<A>(A value) => 
-            new Some<A>(value);
-
-        [Pure]
-        public static implicit operator A(Some<A> value) => 
-            value.Value;
-
-        [Pure]
-        public override string ToString() =>
-            Value.ToString();
 
         [Pure]
         public override int GetHashCode() =>
             Value.GetHashCode();
 
         [Pure]
-        public override bool Equals(object obj) =>
-            Value.Equals(obj);
-
-        [Pure]
-        public bool IsSome =>
-            initialised;
-
-        [Pure]
-        public bool IsNone =>
-            !initialised;
+        public Type GetUnderlyingType() =>
+            typeof(A);
 
         [Pure]
         public R MatchUntyped<R>(Func<object, R> Some, Func<R> None) =>
@@ -137,8 +127,18 @@ namespace LanguageExt
                 : None();
 
         [Pure]
-        public Type GetUnderlyingType() =>
-            typeof(A);
+        public Seq<A> ToSeq() =>
+            initialised
+                ? Seq1(value)
+                : Empty;
+
+        [Pure]
+        public override string ToString() =>
+            Value.ToString();
+
+        [Pure]
+        IEnumerator IEnumerable.GetEnumerator() =>
+            AsEnumerable().GetEnumerator();
     }
 
     public static class Some

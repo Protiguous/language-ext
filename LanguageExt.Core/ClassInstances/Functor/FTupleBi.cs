@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<Tuple<A, B>, Tuple<U, V>, A, B, U, V>,
         BiFunctor<ValueTuple<A, B>, ValueTuple<U, V>, A, B, U, V>
     {
-        public static readonly FTupleBi<A, B, U, V> Inst = default(FTupleBi<A, B, U, V>);
+        public static readonly FTupleBi<A, B, U, V> Inst = default;
 
         /// <summary>
         /// Maps both items in the tuple

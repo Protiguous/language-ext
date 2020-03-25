@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
         Functor<Either<L, R>, Either<L, R2>, R, R2>,
         BiFunctor<Either<L, R>, Either<L, R2>, L, R, R2>
     {
-        public static readonly FEither<L, R, R2> Inst = default(FEither<L, R, R2>);
+        public static readonly FEither<L, R, R2> Inst = default;
 
         [Pure]
         public Either<L, R2> BiMap(Either<L, R> ma, Func<L, R2> fa, Func<R, R2> fb) =>
@@ -28,7 +28,7 @@ namespace LanguageExt.ClassInstances
     public struct FEitherBi<L, R, L2, R2> :
         BiFunctor<Either<L, R>, Either<L2, R2>, L, R, L2, R2>
     {
-        public static readonly FEitherBi<L, R, L2, R2> Inst = default(FEitherBi<L, R, L2, R2>);
+        public static readonly FEitherBi<L, R, L2, R2> Inst = default;
 
         [Pure]
         public Either<L2, R2> BiMap(Either<L, R> ma, Func<L, L2> fa, Func<R, R2> fb) =>

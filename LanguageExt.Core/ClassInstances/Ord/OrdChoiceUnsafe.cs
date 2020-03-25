@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         where OrdA     : struct, Ord<A>
         where OrdB     : struct, Ord<B>
     {
-        public static readonly OrdChoiceUnsafe<OrdA, OrdB, ChoiceAB, CH, A, B> Inst = default(OrdChoiceUnsafe<OrdA, OrdB, ChoiceAB, CH, A, B>);
+        public static readonly OrdChoiceUnsafe<OrdA, OrdB, ChoiceAB, CH, A, B> Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -77,7 +77,7 @@ namespace LanguageExt.ClassInstances
         where ChoiceAB : struct, ChoiceUnsafe<CH, A, B>
         where OrdB     : struct, Ord<B>
     {
-        public static readonly OrdChoiceUnsafe<OrdB, ChoiceAB, CH, A, B> Inst = default(OrdChoiceUnsafe<OrdB, ChoiceAB, CH, A, B>);
+        public static readonly OrdChoiceUnsafe<OrdB, ChoiceAB, CH, A, B> Inst = default;
 
         /// <summary>
         /// Compare two values
@@ -119,7 +119,7 @@ namespace LanguageExt.ClassInstances
     public struct OrdChoiceUnsafe<ChoiceAB, CH, A, B> : Ord<CH>
         where ChoiceAB : struct, ChoiceUnsafe<CH, A, B>
     {
-        public static readonly OrdChoiceUnsafe<ChoiceAB, CH, A, B> Inst = default(OrdChoiceUnsafe<ChoiceAB, CH, A, B>);
+        public static readonly OrdChoiceUnsafe<ChoiceAB, CH, A, B> Inst = default;
 
         /// <summary>
         /// Compare two values

@@ -18,7 +18,7 @@ namespace LanguageExt.ClassInstances
         Ord<Arr<A>>,
         Monoid<Arr<A>>
    {
-        public static readonly MArr<A> Inst = default(MArr<A>);
+        public static readonly MArr<A> Inst = default;
 
         [Pure]
         public Arr<A> Append(Arr<A> x, Arr<A> y) =>

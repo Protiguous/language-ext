@@ -40,7 +40,7 @@ namespace LanguageExt.Common
     public struct OptionalResult<A> : IEquatable<OptionalResult<A>>, IComparable<OptionalResult<A>>
     {
         internal static readonly OptionalResult<A> None = new OptionalResult<A>(Prelude.None);
-        internal static readonly OptionalResult<A> Bottom = default(OptionalResult<A>);
+        internal static readonly OptionalResult<A> Bottom = default;
 
         internal readonly OptionalResultState State;
         internal readonly Option<A> Value;

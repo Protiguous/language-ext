@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
         OptionalUnsafe<EitherUnsafe<L, R>, R>,
         BiFoldable<EitherUnsafe<L, R>, L, R>
     {
-        public static readonly MEitherUnsafe<L, R> Inst = default(MEitherUnsafe<L, R>);
+        public static readonly MEitherUnsafe<L, R> Inst = default;
 
         [Pure]
         public MB Bind<MONADB, MB, B>(EitherUnsafe<L, R> ma, Func<R, MB> f) where MONADB : struct, Monad<Unit, Unit, MB, B> =>
@@ -47,7 +47,7 @@ namespace LanguageExt.ClassInstances
 
         [Pure]
         public EitherUnsafe<L, R> Zero() =>
-            default(EitherUnsafe<L, R>);
+            default;
 
         [Pure]
         public bool IsNone(EitherUnsafe<L, R> opt) =>

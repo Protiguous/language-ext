@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct TShort : Num<short>, Bool<short>
     {
-        public static readonly TShort Inst = default(TShort);
+        public static readonly TShort Inst = default;
 
         /// <summary>
         /// Equality test

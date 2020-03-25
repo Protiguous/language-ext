@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<Arr<A>, Arr<B>, A, B>,
         Applicative<Arr<Func<A, B>>, Arr<A>, Arr<B>, A, B>
     {
-        public static readonly ApplArr<A, B> Inst = default(ApplArr<A, B>);
+        public static readonly ApplArr<A, B> Inst = default;
 
         [Pure]
         public Arr<B> Action(Arr<A> fa, Arr<B> fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplArr<A, B, C> :
         Applicative<Arr<Func<A, Func<B, C>>>, Arr<Func<B, C>>, Arr<A>, Arr<B>, Arr<C>, A, B, C>
     {
-        public static readonly ApplArr<A, B, C> Inst = default(ApplArr<A, B, C>);
+        public static readonly ApplArr<A, B, C> Inst = default;
 
         [Pure]
         public Arr<Func<B, C>> Apply(Arr<Func<A, Func<B, C>>> fabc, Arr<A> fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Arr<Func<A, A>>, Arr<A>, Arr<A>, A, A>,
         Applicative<Arr<Func<A, Func<A, A>>>, Arr<Func<A, A>>, Arr<A>, Arr<A>, Arr<A>, A, A, A>
     {
-        public static readonly ApplArr<A> Inst = default(ApplArr<A>);
+        public static readonly ApplArr<A> Inst = default;
 
         [Pure]
         public Arr<A> Action(Arr<A> fa, Arr<A> fb) =>

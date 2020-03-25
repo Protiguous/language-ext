@@ -795,25 +795,25 @@ namespace LanguageExt
         public static EitherAsync<L, R> Right(R value) =>
             isnull(value)
                 ? throw new ValueIsNullException()
-                : new EitherAsync<L, R>(new EitherData<L, R>(EitherStatus.IsRight, value, default(L)).AsTask());
+                : new EitherAsync<L, R>(new EitherData<L, R>(EitherStatus.IsRight, value, default).AsTask());
 
         [Pure]
         public static EitherAsync<L, R> RightAsync(Task<R> value) =>
             isnull(value)
                 ? throw new ArgumentNullException(nameof(value))
-                : new EitherAsync<L, R>(value.Map(r => new EitherData<L, R>(EitherStatus.IsRight, r, default(L))));
+                : new EitherAsync<L, R>(value.Map(r => new EitherData<L, R>(EitherStatus.IsRight, r, default)));
 
         [Pure]
         public static EitherAsync<L, R> Left(L value) =>
             isnull(value)
                 ? throw new ValueIsNullException()
-                : new EitherAsync<L, R>(new EitherData<L, R>(EitherStatus.IsLeft, default(R), value).AsTask());
+                : new EitherAsync<L, R>(new EitherData<L, R>(EitherStatus.IsLeft, default, value).AsTask());
 
         [Pure]
         public static EitherAsync<L, R> LeftAsync(Task<L> value) =>
             isnull(value)
                 ? throw new ArgumentNullException(nameof(value))
-                : new EitherAsync<L, R>(value.Map(l => new EitherData<L, R>(EitherStatus.IsLeft, default(R), l)));
+                : new EitherAsync<L, R>(value.Map(l => new EitherData<L, R>(EitherStatus.IsLeft, default, l)));
 
         [Pure]
         internal async Task<R> RightValue() =>
@@ -1356,9 +1356,9 @@ namespace LanguageExt
         {
             async Task<EitherData<L2, R2>> Do(EitherAsync<L, R> self, Func<R, R2> right, Func<L, L2> left) =>
                 (await self.IsRight)
-                    ? new EitherData<L2, R2>(EitherStatus.IsRight, right(await self.RightValue()), default(L2))
+                    ? new EitherData<L2, R2>(EitherStatus.IsRight, right(await self.RightValue()), default)
                     : (await self.IsLeft)
-                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default(R2), left(await self.LeftValue()))
+                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default, left(await self.LeftValue()))
                         : EitherData<L2, R2>.Bottom;
 
             return new EitherAsync<L2, R2>(Do(this, Right, Left));
@@ -1380,9 +1380,9 @@ namespace LanguageExt
         {
             async Task<EitherData<L2, R2>> Do(EitherAsync<L, R> self, Func<R, Task<R2>> right, Func<L, L2> left) =>
                 (await self.IsRight)
-                    ? new EitherData<L2, R2>(EitherStatus.IsRight, await right(await self.RightValue()), default(L2))
+                    ? new EitherData<L2, R2>(EitherStatus.IsRight, await right(await self.RightValue()), default)
                     : (await self.IsLeft)
-                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default(R2), left(await self.LeftValue()))
+                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default, left(await self.LeftValue()))
                         : EitherData<L2, R2>.Bottom;
 
             return new EitherAsync<L2, R2>(Do(this, RightAsync, Left));
@@ -1404,9 +1404,9 @@ namespace LanguageExt
         {
             async Task<EitherData<L2, R2>> Do(EitherAsync<L, R> self, Func<R, R2> right, Func<L, Task<L2>> left) =>
                 (await self.IsRight)
-                    ? new EitherData<L2, R2>(EitherStatus.IsRight, right(await self.RightValue()), default(L2))
+                    ? new EitherData<L2, R2>(EitherStatus.IsRight, right(await self.RightValue()), default)
                     : (await self.IsLeft)
-                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default(R2), await left(await self.LeftValue()))
+                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default, await left(await self.LeftValue()))
                         : EitherData<L2, R2>.Bottom;
 
             return new EitherAsync<L2, R2>(Do(this, Right, LeftAsync));
@@ -1428,9 +1428,9 @@ namespace LanguageExt
         {
             async Task<EitherData<L2, R2>> Do(EitherAsync<L, R> self, Func<R, Task<R2>> right, Func<L, Task<L2>> left) =>
                 (await self.IsRight)
-                    ? new EitherData<L2, R2>(EitherStatus.IsRight, await right(await self.RightValue()), default(L2))
+                    ? new EitherData<L2, R2>(EitherStatus.IsRight, await right(await self.RightValue()), default)
                     : (await self.IsLeft)
-                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default(R2), await left(await self.LeftValue()))
+                        ? new EitherData<L2, R2>(EitherStatus.IsLeft, default, await left(await self.LeftValue()))
                         : EitherData<L2, R2>.Bottom;
 
             return new EitherAsync<L2, R2>(Do(this, RightAsync, LeftAsync));
@@ -1458,7 +1458,7 @@ namespace LanguageExt
                 else
                 {
                     return (await self.IsLeft)
-                        ? new EitherData<L, Ret>(EitherStatus.IsLeft, default(Ret), await self.LeftValue())
+                        ? new EitherData<L, Ret>(EitherStatus.IsLeft, default, await self.LeftValue())
                         : EitherData<L, Ret>.Bottom;
                 }
             }
@@ -1488,7 +1488,7 @@ namespace LanguageExt
                 else
                 {
                     return (await self.IsLeft)
-                        ? new EitherData<L, Ret>(EitherStatus.IsLeft, default(Ret), await self.LeftValue())
+                        ? new EitherData<L, Ret>(EitherStatus.IsLeft, default, await self.LeftValue())
                         : EitherData<L, Ret>.Bottom;
                 }
             }
@@ -1609,7 +1609,7 @@ namespace LanguageExt
             {
                 if (await self.IsRight)
                 {
-                    return new EitherData<B, R>(EitherStatus.IsRight, await self.RightValue(), default(B));
+                    return new EitherData<B, R>(EitherStatus.IsRight, await self.RightValue(), default);
                 }
                 if (await self.IsLeft)
                 {
@@ -1633,7 +1633,7 @@ namespace LanguageExt
             {
                 if (await self.IsRight)
                 {
-                    return new EitherData<B, R>(EitherStatus.IsRight, await self.RightValue(), default(B));
+                    return new EitherData<B, R>(EitherStatus.IsRight, await self.RightValue(), default);
                 }
                 if (await self.IsLeft)
                 {

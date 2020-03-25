@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqBigInt : Eq<bigint>
     {
-        public static readonly EqBigInt Inst = default(EqBigInt);
+        public static readonly EqBigInt Inst = default;
 
         /// <summary>
         /// Equality test

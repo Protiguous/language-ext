@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         where OptionalA : struct, Optional<OA, A>
         where OptionalB : struct, Optional<OB, B>
     {
-        public static readonly ApplOptional<OptionalA, OptionalB, OA, OB, A, B> Inst = default(ApplOptional<OptionalA, OptionalB, OA, OB, A, B>);
+        public static readonly ApplOptional<OptionalA, OptionalB, OA, OB, A, B> Inst = default;
 
         [Pure]
         public OB BiMap(OA ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -28,7 +28,7 @@ namespace LanguageExt.ClassInstances
             where OptionFA : struct, Optional<FA, A>
             where OptionFB : struct, Optional<FB, B>
     {
-        public static readonly ApplOptional<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B> Inst = default(ApplOptional<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B>);
+        public static readonly ApplOptional<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B> Inst = default;
 
         [Pure]
         public FB Action(FA fa, FB fb)
@@ -59,7 +59,7 @@ namespace LanguageExt.ClassInstances
             where OptionFB   : struct, Optional<FB, B>
             where OptionFC   : struct, Optional<FC, C>
     {
-        public static readonly ApplOptional<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C> Inst = default(ApplOptional<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C>);
+        public static readonly ApplOptional<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C> Inst = default;
 
         [Pure]
         public FBC Apply(FABC fabc, FA fa) =>

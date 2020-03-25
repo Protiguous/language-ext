@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         FunctorAsync<Task<A>, Task<B>, A, B>,
         BiFunctorAsync<Task<A>, Task<B>, A, Unit, B>
     {
-        public static readonly FTask<A, B> Inst = default(FTask<A, B>);
+        public static readonly FTask<A, B> Inst = default;
 
         [Pure]
         public Task<B> BiMapAsync(Task<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>

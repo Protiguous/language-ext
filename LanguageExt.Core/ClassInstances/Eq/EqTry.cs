@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
     public struct EqTry<EQ, A> : Eq<Try<A>>
         where EQ : struct, Eq<A>
     {
-        public static readonly EqTry<EQ, A> Inst = default(EqTry<EQ, A>);
+        public static readonly EqTry<EQ, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -43,7 +43,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqTry<A> : Eq<Try<A>>
     {
-        public static readonly EqTry<A> Inst = default(EqTry<A>);
+        public static readonly EqTry<A> Inst = default;
 
         /// <summary>
         /// Equality test

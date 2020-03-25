@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances.Pred
         where MIN : struct, Const<int>
         where MAX : struct, Const<int>
     {
-        public static readonly CountRange<MIN, MAX> Is = default(CountRange<MIN, MAX>);
+        public static readonly CountRange<MIN, MAX> Is = default;
 
         [Pure]
         public bool True(ListInfo value) =>

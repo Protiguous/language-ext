@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
         Functor<Validation<FAIL, SUCCESS>, Validation<FAIL, SUCCESS2>, SUCCESS, SUCCESS2>,
         BiFunctor<Validation<FAIL, SUCCESS>, Validation<FAIL, SUCCESS2>, Seq<FAIL>, SUCCESS, SUCCESS2>
     {
-        public static readonly FValidation<FAIL, SUCCESS, SUCCESS2> Inst = default(FValidation<FAIL, SUCCESS, SUCCESS2>);
+        public static readonly FValidation<FAIL, SUCCESS, SUCCESS2> Inst = default;
 
         [Pure]
         public Validation<FAIL, SUCCESS2> BiMap(Validation<FAIL, SUCCESS> ma, Func<Seq<FAIL>, SUCCESS2> fa, Func<SUCCESS, SUCCESS2> fb) =>
@@ -27,7 +27,7 @@ namespace LanguageExt.ClassInstances
     public struct FValidationBi<FAIL, SUCCESS, FAIL2, SUCCESS2> :
         BiFunctor<Validation<FAIL, SUCCESS>, Validation<FAIL2, SUCCESS2>, FAIL, SUCCESS, FAIL2, SUCCESS2>
     {
-        public static readonly FValidationBi<FAIL, SUCCESS, FAIL2, SUCCESS2> Inst = default(FValidationBi<FAIL, SUCCESS, FAIL2, SUCCESS2>);
+        public static readonly FValidationBi<FAIL, SUCCESS, FAIL2, SUCCESS2> Inst = default;
 
         [Pure]
         public Validation<FAIL2, SUCCESS2> BiMap(Validation<FAIL, SUCCESS> ma, Func<FAIL, FAIL2> fa, Func<SUCCESS, SUCCESS2> fb) =>

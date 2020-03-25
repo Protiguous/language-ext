@@ -8,6 +8,25 @@ using LanguageExt.Common;
 namespace LanguageExt
 {
     /// <summary>
+    /// Exception extensions
+    /// </summary>
+    public static class ExceptionOptionalAsyncExtensions
+    {
+        /// <summary>
+        /// Pattern matching for exceptions.  This is to aid expression based error handling.
+        /// </summary>
+        /// <example>
+        ///     tr.Match&lt;string&gt;()
+        ///       .With&lt;SystemException&gt;(e =&gt; "It's a system exception")
+        ///       .With&lt;ArgumentNullException&gt;(e =&gt; "Arg null")
+        ///       .Otherwise("Not handled")
+        /// </example>
+        [Pure]
+        public static LanguageExt.ExceptionMatchOptionalAsync<R> Match<R>(this Task<OptionalResult<R>> self) =>
+            new LanguageExt.ExceptionMatchOptionalAsync<R>(self);
+    }
+
+    /// <summary>
     /// Pattern matching for exceptions.  This is to aid expression based error handling.
     /// </summary>
     /// <example>
@@ -19,8 +38,15 @@ namespace LanguageExt
     [Serializable]
     public class ExceptionMatchOptionalAsync<R>
     {
-        readonly Task<OptionalResult<R>> Value;
-        List<Func<Exception, (R Value, bool IsSet)>> actions = new List<Func<Exception, (R Value, bool IsSet)>>();
+        private readonly Task<OptionalResult<R>> Value;
+        private List<Func<Exception, (R Value, bool IsSet)>> actions = new List<Func<Exception, (R Value, bool IsSet)>>();
+
+        private Task<(Option<R> Result, bool IsSet, Exception Exception)> Expr =>
+                    from res in Value
+                    let tup = res.IsFaulted
+                        ? actions.Fold((default(R), false), (state, action) => state.Item2 ? state : action(res.Exception))
+                        : (res.Value, true)
+                    select (tup.Item1, tup.Item2, res.Exception);
 
         /// <summary>
         /// Ctor
@@ -28,6 +54,55 @@ namespace LanguageExt
         /// <param name="e">Exception to match</param>
         internal ExceptionMatchOptionalAsync(Task<OptionalResult<R>> value) =>
             Value = value;
+
+        /// <summary>
+        /// Invokes the match expression and provides a default value if nothing matches
+        /// </summary>
+        /// <param name="otherwiseValue">Default value</param>
+        /// <returns>Result of the expression</returns>
+        [Pure]
+        public Task<Option<R>> Otherwise(R otherwiseValue) =>
+            from tup in Expr
+            select tup.IsSet
+                ? tup.Result
+                : otherwiseValue;
+
+        /// <summary>
+        /// Invokes the match expression and provides a default function to invoke if
+        /// nothing matches
+        /// </summary>
+        /// <param name="otherwise">Default value</param>
+        /// <returns>Result of the expression</returns>
+        [Pure]
+        public Task<Option<R>> Otherwise(Func<R> otherwise) =>
+            from tup in Expr
+            select tup.IsSet
+                ? tup.Result
+                : otherwise();
+
+        /// <summary>
+        /// Invokes the match expression and provides a default function to invoke if
+        /// nothing matches
+        /// </summary>
+        /// <param name="otherwiseMap">Default value</param>
+        /// <returns>Result of the expression</returns>
+        [Pure]
+        public Task<Option<R>> Otherwise(Func<Exception, R> otherwiseMap) =>
+            from tup in Expr
+            select tup.IsSet
+                ? tup.Result
+                : otherwiseMap(tup.Exception);
+
+        /// <summary>
+        /// Invokes the match expression and provides a default value if nothing matches
+        /// </summary>
+        /// <returns>Result of the expression</returns>
+        [Pure]
+        public Task<Option<R>> OtherwiseReThrow() =>
+            from tup in Expr
+            select tup.IsSet
+                ? tup.Result
+                : throw new InnerException(tup.Exception);
 
         /// <summary>
         /// Matches a typed exception with a mapping function
@@ -46,85 +121,10 @@ namespace LanguageExt
                 }
                 else
                 {
-                    return (default(R), false);
+                    return (default, false);
                 }
             });
             return this;
         }
-
-        Task<(Option<R> Result, bool IsSet, Exception Exception)> Expr =>
-            from res in Value
-            let tup = res.IsFaulted
-                ? actions.Fold((default(R), false), (state, action) => state.Item2 ? state : action(res.Exception))
-                : (res.Value, true)
-            select (tup.Item1, tup. Item2, res.Exception);
-
-        /// <summary>
-        /// Invokes the match expression and provides a default value if nothing matches
-        /// </summary>
-        /// <returns>Result of the expression</returns>
-        [Pure]
-        public Task<Option<R>> OtherwiseReThrow() =>
-            from tup in Expr
-            select tup.IsSet
-                ? tup.Result
-                : throw new InnerException(tup.Exception);
-
-        /// <summary>
-        /// Invokes the match expression and provides a default value if nothing matches
-        /// </summary>
-        /// <param name="otherwiseValue">Default value</param>
-        /// <returns>Result of the expression</returns>
-        [Pure]
-        public Task<Option<R>> Otherwise(R otherwiseValue) =>
-            from tup in Expr
-            select tup.IsSet
-                ? tup.Result
-                : otherwiseValue;
-
-        /// <summary>
-        /// Invokes the match expression and provides a default function to invoke if 
-        /// nothing matches
-        /// </summary>
-        /// <param name="otherwise">Default value</param>
-        /// <returns>Result of the expression</returns>
-        [Pure]
-        public Task<Option<R>> Otherwise(Func<R> otherwise) =>
-            from tup in Expr
-            select tup.IsSet
-                ? tup.Result
-                : otherwise();
-
-        /// <summary>
-        /// Invokes the match expression and provides a default function to invoke if 
-        /// nothing matches
-        /// </summary>
-        /// <param name="otherwiseMap">Default value</param>
-        /// <returns>Result of the expression</returns>
-        [Pure]
-        public Task<Option<R>> Otherwise(Func<Exception, R> otherwiseMap) =>
-            from tup in Expr
-            select tup.IsSet
-                ? tup.Result
-                : otherwiseMap(tup.Exception);
-    }
-
-    /// <summary>
-    /// Exception extensions
-    /// </summary>
-    public static class ExceptionOptionalAsyncExtensions
-    {
-        /// <summary>
-        /// Pattern matching for exceptions.  This is to aid expression based error handling.
-        /// </summary>
-        /// <example>
-        ///     tr.Match&lt;string&gt;()
-        ///       .With&lt;SystemException&gt;(e =&gt; "It's a system exception")
-        ///       .With&lt;ArgumentNullException&gt;(e =&gt; "Arg null")
-        ///       .Otherwise("Not handled")
-        /// </example>
-        [Pure]
-        public static LanguageExt.ExceptionMatchOptionalAsync<R> Match<R>(this Task<OptionalResult<R>> self) =>
-            new LanguageExt.ExceptionMatchOptionalAsync<R>(self);
     }
 }

@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         BiFoldable<Either<L, R>, L, R>,
         AsyncPair<Either<L, R>, EitherAsync<L, R>>
     {
-        public static readonly MEither<L, R> Inst = default(MEither<L, R>);
+        public static readonly MEither<L, R> Inst = default;
 
         [Pure]
         public MB Bind<MONADB, MB, B>(Either<L, R> ma, Func<R, MB> f) where MONADB : struct, Monad<Unit, Unit, MB, B> =>
@@ -50,7 +50,7 @@ namespace LanguageExt.ClassInstances
 
         [Pure]
         public Either<L, R> Zero() =>
-            default(Either<L, R>);
+            default;
 
         [Pure]
         public bool IsNone(Either<L, R> opt) =>

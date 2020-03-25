@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctorAsync<EitherAsync<L, A>, EitherAsync<L, B>, L, A, B>,
         ApplicativeAsync<EitherAsync<L, Func<A, B>>, EitherAsync<L, A>, EitherAsync<L, B>, A, B>
     {
-        public static ApplEitherAsync<L, A, B> Inst = default(ApplEitherAsync<L, A, B>);
+        public static ApplEitherAsync<L, A, B> Inst = default;
 
         [Pure]
         public EitherAsync<L, B> Action(EitherAsync<L, A> fa, EitherAsync<L, B> fb) =>
@@ -56,7 +56,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplEitherAsync<L, A, B, C> :
         ApplicativeAsync<EitherAsync<L, Func<A, Func<B, C>>>, EitherAsync<L, Func<B, C>>, EitherAsync<L, A>, EitherAsync<L, B>, EitherAsync<L, C>, A, B, C>
     {
-        public static ApplEitherAsync<L, A, B, C> Inst = default(ApplEitherAsync<L, A, B, C>);
+        public static ApplEitherAsync<L, A, B, C> Inst = default;
 
         public EitherAsync<L, Func<B, C>> Apply(EitherAsync<L, Func<A, Func<B, C>>> fabc, EitherAsync<L, A> fa) =>
             from f in fabc

@@ -6,7 +6,7 @@ namespace LanguageExt.ClassInstances
 {
     public struct TFloat : Ord<float>, Floating<float>
     {
-        public static readonly TFloat Inst = default(TFloat);
+        public static readonly TFloat Inst = default;
 
         /// <summary>
         /// Equality test

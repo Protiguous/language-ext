@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdDateTime : Ord<DateTime>
     {
-        public static readonly OrdDateTime Inst = default(OrdDateTime);
+        public static readonly OrdDateTime Inst = default;
 
         /// <summary>
         /// Equality test

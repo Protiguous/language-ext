@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         FunctorAsync<TryAsync<A>, TryAsync<B>, A, B>,
         BiFunctorAsync<TryAsync<A>, TryAsync<B>, A, Unit, B>
     {
-        public static readonly FTryAsync<A, B> Inst = default(FTryAsync<A, B>);
+        public static readonly FTryAsync<A, B> Inst = default;
 
         [Pure]
         public TryAsync<B> BiMapAsync(TryAsync<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>

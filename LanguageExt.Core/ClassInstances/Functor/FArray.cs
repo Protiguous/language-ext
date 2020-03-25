@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     public struct FArray<A, B> :
         Functor<A[], B[], A, B>
     {
-        public static readonly FArray<A, B> Inst = default(FArray<A, B>);
+        public static readonly FArray<A, B> Inst = default;
 
         [Pure]
         public B[] Map(A[] ma, Func<A, B> f)

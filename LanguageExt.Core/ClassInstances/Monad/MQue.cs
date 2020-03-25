@@ -20,7 +20,7 @@ namespace LanguageExt.ClassInstances
         Eq<Que<A>>,
         Monoid<Que<A>>
    {
-        public static readonly MQue<A> Inst = default(MQue<A>);
+        public static readonly MQue<A> Inst = default;
 
         [Pure]
         public Que<A> Append(Que<A> x, Que<A> y) =>

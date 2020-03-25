@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         FunctorAsync<OptionAsync<A>, OptionAsync<B>, A, B>,
         BiFunctorAsync<OptionAsync<A>, OptionAsync<B>, A, Unit, B>
     {
-        public static readonly FOptionAsync<A, B> Inst = default(FOptionAsync<A, B>);
+        public static readonly FOptionAsync<A, B> Inst = default;
 
         [Pure]
         public OptionAsync<B> BiMapAsync(OptionAsync<A> ma, Func<A, B> fa, Func<Unit, B> fb)

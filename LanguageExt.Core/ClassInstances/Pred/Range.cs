@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances.Pred
         where MIN : struct, Const<A>
         where MAX : struct, Const<A>
     {
-        public static readonly Range<ORD, A, MIN, MAX> Is = default(Range<ORD, A, MIN, MAX>);
+        public static readonly Range<ORD, A, MIN, MAX> Is = default;
 
         [Pure]
         public bool True(A value) =>

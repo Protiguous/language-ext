@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<Seq<A>, Seq<B>, A, B>,
         Applicative<Seq<Func<A, B>>, Seq<A>, Seq<B>, A, B>
     {
-        public static readonly ApplSeq<A, B> Inst = default(ApplSeq<A, B>);
+        public static readonly ApplSeq<A, B> Inst = default;
 
         [Pure]
         public Seq<B> Action(Seq<A> fa, Seq<B> fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplSeq<A, B, C> :
         Applicative<Seq<Func<A, Func<B, C>>>, Seq<Func<B, C>>, Seq<A>, Seq<B>, Seq<C>, A, B, C>
     {
-        public static readonly ApplSeq<A, B, C> Inst = default(ApplSeq<A, B, C>);
+        public static readonly ApplSeq<A, B, C> Inst = default;
 
         [Pure]
         public Seq<Func<B, C>> Apply(Seq<Func<A, Func<B, C>>> fabc, Seq<A> fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Seq<Func<A, A>>, Seq<A>, Seq<A>, A, A>,
         Applicative<Seq<Func<A, Func<A, A>>>, Seq<Func<A, A>>, Seq<A>, Seq<A>, Seq<A>, A, A, A>
     {
-        public static readonly ApplSeq<A> Inst = default(ApplSeq<A>);
+        public static readonly ApplSeq<A> Inst = default;
 
         [Pure]
         public Seq<A> Action(Seq<A> fa, Seq<A> fb) =>

@@ -14,7 +14,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqDefault<A> : Eq<A>
     {
-        public static readonly EqDefault<A> Inst = default(EqDefault<A>);
+        public static readonly EqDefault<A> Inst = default;
 
         static readonly Func<A, A, bool> eq;
         static readonly Func<A, int> hash;

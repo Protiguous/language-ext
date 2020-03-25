@@ -7,7 +7,7 @@ namespace LanguageExt.ClassInstances
     public struct FArr<A, B> : 
         Functor<Arr<A>, Arr<B>, A, B>
     {
-        public static readonly FArr<A, B> Inst = default(FArr<A, B>);
+        public static readonly FArr<A, B> Inst = default;
 
         [Pure]
         public Arr<B> Map(Arr<A> ma, Func<A, B> f)

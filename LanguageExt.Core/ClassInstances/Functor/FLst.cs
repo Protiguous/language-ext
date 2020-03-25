@@ -7,7 +7,7 @@ namespace LanguageExt.ClassInstances
     public struct FLst<A, B> :
         Functor<Lst<A>, Lst<B>, A, B>
     {
-        public static readonly FLst<A, B> Inst = default(FLst<A, B>);
+        public static readonly FLst<A, B> Inst = default;
 
         [Pure]
         public Lst<B> Map(Lst<A> ma, Func<A, B> f) =>

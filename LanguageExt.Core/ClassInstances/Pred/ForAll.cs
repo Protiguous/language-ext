@@ -14,7 +14,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term1 : struct, Pred<A>
         where Term2 : struct, Pred<A>
     {
-        public static readonly ForAll<A, Term1, Term2> Is = default(ForAll<A, Term1, Term2>);
+        public static readonly ForAll<A, Term1, Term2> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -34,7 +34,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term2 : struct, Pred<A>
         where Term3 : struct, Pred<A>
     {
-        public static readonly ForAll<A, Term1, Term2, Term3> Is = default(ForAll<A, Term1, Term2, Term3>);
+        public static readonly ForAll<A, Term1, Term2, Term3> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -57,7 +57,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term3 : struct, Pred<A>
         where Term4 : struct, Pred<A>
     {
-        public static readonly ForAll<A, Term1, Term2, Term3, Term4> Is = default(ForAll<A, Term1, Term2, Term3, Term4>);
+        public static readonly ForAll<A, Term1, Term2, Term3, Term4> Is = default;
 
         public bool True(A value) =>
             default(Term1).True(value) &&
@@ -82,7 +82,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term4 : struct, Pred<A>
         where Term5 : struct, Pred<A>
     {
-        public static readonly ForAll<A, Term1, Term2, Term3, Term4, Term5> Is = default(ForAll<A, Term1, Term2, Term3, Term4, Term5>);
+        public static readonly ForAll<A, Term1, Term2, Term3, Term4, Term5> Is = default;
 
         public bool True(A value) =>
             default(Term1).True(value) &&

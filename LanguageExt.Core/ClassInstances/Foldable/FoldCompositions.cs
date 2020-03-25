@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         S FoldNode<S>(S state, Func<S, A, S> f, Compositions<A>.Node node)
         {
             if (node.Children.IsNone) return f(state, node.Value);
-            var (l, r) = node.Children.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+            var (l, r) = node.Children.IfNone((default, default));
             state = FoldNode(state, f, l);
             state = FoldNode(state, f, r);
             return state;
@@ -22,7 +22,7 @@ namespace LanguageExt.ClassInstances
         S FoldNodeBack<S>(S state, Func<S, A, S> f, Compositions<A>.Node node)
         {
             if (node.Children.IsNone) return f(state, node.Value);
-            var (l, r) = node.Children.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+            var (l, r) = node.Children.IfNone((default, default));
             state = FoldNode(state, f, r);
             state = FoldNode(state, f, l);
             return state;

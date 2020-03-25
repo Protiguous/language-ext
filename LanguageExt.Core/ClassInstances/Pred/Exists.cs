@@ -14,7 +14,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term1 : struct, Pred<A>
         where Term2 : struct, Pred<A>
     {
-        public static readonly Exists<A, Term1, Term2> Is = default(Exists<A, Term1, Term2>);
+        public static readonly Exists<A, Term1, Term2> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -33,7 +33,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term2 : struct, Pred<A>
         where Term3 : struct, Pred<A>
     {
-        public static readonly Exists<A, Term1, Term2, Term3> Is = default(Exists<A, Term1, Term2, Term3>);
+        public static readonly Exists<A, Term1, Term2, Term3> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -54,7 +54,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term3 : struct, Pred<A>
         where Term4 : struct, Pred<A>
     {
-        public static readonly Exists<A, Term1, Term2, Term3, Term4> Is = default(Exists<A, Term1, Term2, Term3, Term4>);
+        public static readonly Exists<A, Term1, Term2, Term3, Term4> Is = default;
 
         [Pure]
         public bool True(A value) =>
@@ -80,7 +80,7 @@ namespace LanguageExt.ClassInstances.Pred
         where Term4 : struct, Pred<A>
         where Term5 : struct, Pred<A>
     {
-        public static readonly Exists<A, Term1, Term2, Term3, Term4, Term5> Is = default(Exists<A, Term1, Term2, Term3, Term4, Term5>);
+        public static readonly Exists<A, Term1, Term2, Term3, Term4, Term5> Is = default;
 
         [Pure]
         public bool True(A value) =>

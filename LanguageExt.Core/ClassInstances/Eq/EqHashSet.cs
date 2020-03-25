@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqHashSet<EQ, A> : Eq<HashSet<A>> where EQ : struct, Eq<A>
     {
-        public static readonly EqHashSet<EQ, A> Inst = default(EqHashSet<EQ, A>);
+        public static readonly EqHashSet<EQ, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -51,7 +51,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqHashSet<A> : Eq<HashSet<A>>
     {
-        public static readonly EqHashSet<A> Inst = default(EqHashSet<A>);
+        public static readonly EqHashSet<A> Inst = default;
 
         /// <summary>
         /// Equality test

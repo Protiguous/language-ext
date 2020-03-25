@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
     public struct OrdEnumerable<OrdA, A> : Ord<IEnumerable<A>>
         where OrdA : struct, Ord<A>
     {
-        public static readonly OrdEnumerable<OrdA, A> Inst = default(OrdEnumerable<OrdA, A>);
+        public static readonly OrdEnumerable<OrdA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -72,7 +72,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdEnumerable<A> : Ord<IEnumerable<A>>
     {
-        public static readonly OrdEnumerable<A> Inst = default(OrdEnumerable<A>);
+        public static readonly OrdEnumerable<A> Inst = default;
 
         /// <summary>
         /// Equality test

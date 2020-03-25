@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqSet<EQ, A> : Eq<Set<A>> where EQ : struct, Eq<A>
     {
-        public static readonly EqSet<EQ, A> Inst = default(EqSet<EQ, A>);
+        public static readonly EqSet<EQ, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -48,7 +48,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqSet<A> : Eq<Set<A>>
     {
-        public static readonly EqSet<A> Inst = default(EqSet<A>);
+        public static readonly EqSet<A> Inst = default;
 
         /// <summary>
         /// Equality test

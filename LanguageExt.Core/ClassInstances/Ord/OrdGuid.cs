@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdGuid : Ord<Guid>
     {
-        public static readonly OrdGuid Inst = default(OrdGuid);
+        public static readonly OrdGuid Inst = default;
 
         /// <summary>
         /// Equality test

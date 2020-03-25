@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
         where EQ     : struct, Eq<A>
         where OPTION : struct, OptionalUnsafe<OA, A>
     {
-        public static readonly EqOptionalUnsafe<EQ, OPTION, OA, A> Inst = default(EqOptionalUnsafe<EQ, OPTION, OA, A>);
+        public static readonly EqOptionalUnsafe<EQ, OPTION, OA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
     public struct EqOptionalUnsafe<OPTION, OA, A> : Eq<OA>
         where OPTION : struct, OptionalUnsafe<OA, A>
     {
-        public static readonly EqOptionalUnsafe<OPTION, OA, A> Inst = default(EqOptionalUnsafe<OPTION, OA, A>);
+        public static readonly EqOptionalUnsafe<OPTION, OA, A> Inst = default;
 
         /// <summary>
         /// Equality test

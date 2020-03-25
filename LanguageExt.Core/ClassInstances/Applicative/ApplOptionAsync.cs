@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctorAsync<OptionAsync<A>, OptionAsync<B>, A, Unit, B>,
         ApplicativeAsync<OptionAsync<Func<A, B>>, OptionAsync<A>, OptionAsync<B>, A, B>
     {
-        public static readonly ApplOptionAsync<A, B> Inst = default(ApplOptionAsync<A, B>);
+        public static readonly ApplOptionAsync<A, B> Inst = default;
 
         [Pure]
         public OptionAsync<B> BiMapAsync(OptionAsync<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -89,7 +89,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplOptionAsync<A, B, C> :
         ApplicativeAsync<OptionAsync<Func<A, Func<B, C>>>, OptionAsync<Func<B, C>>, OptionAsync<A>, OptionAsync<B>, OptionAsync<C>, A, B, C>
     {
-        public static readonly ApplOptionAsync<A, B, C> Inst = default(ApplOptionAsync<A, B, C>);
+        public static readonly ApplOptionAsync<A, B, C> Inst = default;
 
         [Pure]
         public OptionAsync<Func<B, C>> Apply(OptionAsync<Func<A, Func<B, C>>> fab, OptionAsync<A> fa)

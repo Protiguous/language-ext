@@ -6,7 +6,7 @@ namespace LanguageExt.ClassInstances
 {
     public struct TDecimal : Ord<decimal>, Floating<decimal>
     {
-        public static readonly TDecimal Inst = default(TDecimal);
+        public static readonly TDecimal Inst = default;
 
         /// <summary>
         /// Equality test

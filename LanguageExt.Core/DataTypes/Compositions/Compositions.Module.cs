@@ -21,7 +21,7 @@ namespace LanguageExt
                 else if (node.Children.IsSome && n == ni)
                 {
                     var v = node.Value;
-                    var (l, r) = node.Children.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+                    var (l, r) = node.Children.IfNone((default, default));
                     return wellFormedNode(n / 2, l) &&
                            default(MonoidEqA).Equals(v, default(MonoidEqA).Append(l.Value, r.Value)) &&
                            wellFormedNode(n / 2, r);
@@ -58,7 +58,7 @@ namespace LanguageExt
                 var ord = n.CompareTo(s);
                 if (ord < 0)
                 {
-                    var (l, r) = c.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+                    var (l, r) = c.IfNone((default, default));
                     return go(n, l.Cons(r.Cons(ri)));
                 }
                 else
@@ -88,7 +88,7 @@ namespace LanguageExt
                 var ord = n.CompareTo(s);
                 if (ord < 0)
                 {
-                    var (l, r) = c.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+                    var (l, r) = c.IfNone((default, default));
                     return go(n, l.Cons(r.Cons(ri)));
                 }
                 else
@@ -119,7 +119,7 @@ namespace LanguageExt
                 var ord = n.CompareTo(s);
                 if (ord < 0)
                 {
-                    var (l, r) = c.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+                    var (l, r) = c.IfNone((default, default));
                     return go(n, l.Cons(r.Cons(ri)));
                 }
                 else

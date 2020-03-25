@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<HashSet<A>, HashSet<B>, A, B>,
         Applicative<HashSet<Func<A, B>>, HashSet<A>, HashSet<B>, A, B>
     {
-        public static readonly ApplHashSet<A, B> Inst = default(ApplHashSet<A, B>);
+        public static readonly ApplHashSet<A, B> Inst = default;
 
         [Pure]
         public HashSet<B> Action(HashSet<A> fa, HashSet<B> fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplHashSet<A, B, C> :
         Applicative<HashSet<Func<A, Func<B, C>>>, HashSet<Func<B, C>>, HashSet<A>, HashSet<B>, HashSet<C>, A, B, C>
     {
-        public static readonly ApplHashSet<A, B, C> Inst = default(ApplHashSet<A, B, C>);
+        public static readonly ApplHashSet<A, B, C> Inst = default;
 
         [Pure]
         public HashSet<Func<B, C>> Apply(HashSet<Func<A, Func<B, C>>> fabc, HashSet<A> fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<HashSet<Func<A, A>>, HashSet<A>, HashSet<A>, A, A>,
         Applicative<HashSet<Func<A, Func<A, A>>>, HashSet<Func<A, A>>, HashSet<A>, HashSet<A>, HashSet<A>, A, A, A>
     {
-        public static readonly ApplHashSet<A> Inst = default(ApplHashSet<A>);
+        public static readonly ApplHashSet<A> Inst = default;
 
         [Pure]
         public HashSet<A> Action(HashSet<A> fa, HashSet<A> fb) =>
@@ -101,7 +101,7 @@ namespace LanguageExt.ClassInstances
         where OrdB : struct, Ord<B>
         where OrdFAB : struct, Ord<Func<A, B>>
     {
-        public static readonly ApplHashSet<OrdFAB, OrdA, OrdB, A, B> Inst = default(ApplHashSet<OrdFAB, OrdA, OrdB, A, B>);
+        public static readonly ApplHashSet<OrdFAB, OrdA, OrdB, A, B> Inst = default;
 
         [Pure]
         public HashSet<OrdB, B> Action(HashSet<OrdA, A> fa, HashSet<OrdB, B> fb)
@@ -152,7 +152,7 @@ namespace LanguageExt.ClassInstances
         where OrdFABC : struct, Ord<Func<A, Func<B, C>>>
         where OrdFBC : struct, Ord<Func<B, C>>
     {
-        public static readonly ApplHashSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C> Inst = default(ApplHashSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C>);
+        public static readonly ApplHashSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C> Inst = default;
 
         [Pure]
         public HashSet<OrdFBC, Func<B, C>> Apply(HashSet<OrdFABC, Func<A, Func<B, C>>> fabc, HashSet<OrdA, A> fa)
@@ -201,7 +201,7 @@ namespace LanguageExt.ClassInstances
         where OrdFAAA : struct, Ord<Func<A, Func<A, A>>>
         where OrdFAA : struct, Ord<Func<A, A>>
     {
-        public static readonly ApplHashSet<A> Inst = default(ApplHashSet<A>);
+        public static readonly ApplHashSet<A> Inst = default;
 
         [Pure]
         public HashSet<OrdA, A> Action(HashSet<OrdA, A> fa, HashSet<OrdA, A> fb)

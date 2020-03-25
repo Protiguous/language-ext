@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
         Functor<Lst<A>, Lst<B>, A, B>,
         Applicative<Lst<Func<A, B>>, Lst<A>, Lst<B>, A, B>
     {
-        public static readonly ApplLst<A, B> Inst = default(ApplLst<A, B>);
+        public static readonly ApplLst<A, B> Inst = default;
 
         [Pure]
         public Lst<B> Action(Lst<A> fa, Lst<B> fb) =>
@@ -35,7 +35,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplLst<A, B, C> :
         Applicative<Lst<Func<A, Func<B, C>>>, Lst<Func<B, C>>, Lst<A>, Lst<B>, Lst<C>, A, B, C>
     {
-        public static readonly ApplLst<A, B, C> Inst = default(ApplLst<A, B, C>);
+        public static readonly ApplLst<A, B, C> Inst = default;
 
         [Pure]
         public Lst<Func<B, C>> Apply(Lst<Func<A, Func<B, C>>> fabc, Lst<A> fa) =>
@@ -59,7 +59,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Lst<Func<A, A>>, Lst<A>, Lst<A>, A, A>,
         Applicative<Lst<Func<A, Func<A, A>>>, Lst<Func<A, A>>, Lst<A>, Lst<A>, Lst<A>, A, A, A>
     {
-        public static readonly ApplLst<A> Inst = default(ApplLst<A>);
+        public static readonly ApplLst<A> Inst = default;
 
         [Pure]
         public Lst<A> Action(Lst<A> fa, Lst<A> fb) =>

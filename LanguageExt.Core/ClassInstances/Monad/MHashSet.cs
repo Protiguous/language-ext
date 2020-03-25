@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         Eq<HashSet<A>>,
         Monoid<HashSet<A>>
    {
-        public static readonly MHashSet<A> Inst = default(MHashSet<A>);
+        public static readonly MHashSet<A> Inst = default;
 
         [Pure]
         public HashSet<A> Append(HashSet<A> x, HashSet<A> y) =>

@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     public struct FSeq<A, B> :
         Functor<Seq<A>, Seq<B>, A, B>
     {
-        public static readonly FSeq<A, B> Inst = default(FSeq<A, B>);
+        public static readonly FSeq<A, B> Inst = default;
 
         [Pure]
         public Seq<B> Map(Seq<A> ma, Func<A, B> f) =>

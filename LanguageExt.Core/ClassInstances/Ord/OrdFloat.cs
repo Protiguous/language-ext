@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdFloat : Ord<float>
     {
-        public static readonly OrdFloat Inst = default(OrdFloat);
+        public static readonly OrdFloat Inst = default;
 
         /// <summary>
         /// Equality test

@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqDecimal : Eq<decimal>
     {
-        public static readonly EqDecimal Inst = default(EqDecimal);
+        public static readonly EqDecimal Inst = default;
 
         /// <summary>
         /// Equality test

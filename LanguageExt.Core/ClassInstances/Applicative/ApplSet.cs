@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<Set<A>, Set<B>, A, B>,
         Applicative<Set<Func<A, B>>, Set<A>, Set<B>, A, B>
     {
-        public static readonly ApplSet<A, B> Inst = default(ApplSet<A, B>);
+        public static readonly ApplSet<A, B> Inst = default;
 
         [Pure]
         public Set<B> Action(Set<A> fa, Set<B> fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplSet<A, B, C> :
         Applicative<Set<Func<A, Func<B, C>>>, Set<Func<B, C>>, Set<A>, Set<B>, Set<C>, A, B, C>
     {
-        public static readonly ApplSet<A, B, C> Inst = default(ApplSet<A, B, C>);
+        public static readonly ApplSet<A, B, C> Inst = default;
 
         [Pure]
         public Set<Func<B, C>> Apply(Set<Func<A, Func<B, C>>> fabc, Set<A> fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Set<Func<A, A>>, Set<A>, Set<A>, A, A>,
         Applicative<Set<Func<A, Func<A, A>>>, Set<Func<A, A>>, Set<A>, Set<A>, Set<A>, A, A, A>
     {
-        public static readonly ApplSet<A> Inst = default(ApplSet<A>);
+        public static readonly ApplSet<A> Inst = default;
 
         [Pure]
         public Set<A> Action(Set<A> fa, Set<A> fb) =>
@@ -101,7 +101,7 @@ namespace LanguageExt.ClassInstances
         where OrdB : struct, Ord<B>
         where OrdFAB : struct, Ord<Func<A,B>>
     {
-        public static readonly ApplSet<OrdFAB, OrdA, OrdB, A, B> Inst = default(ApplSet<OrdFAB, OrdA, OrdB, A, B>);
+        public static readonly ApplSet<OrdFAB, OrdA, OrdB, A, B> Inst = default;
 
         [Pure]
         public Set<OrdB, B> Action(Set<OrdA, A> fa, Set<OrdB, B> fb)
@@ -152,7 +152,7 @@ namespace LanguageExt.ClassInstances
         where OrdFABC : struct, Ord<Func<A, Func<B, C>>>
         where OrdFBC : struct, Ord<Func<B, C>>
     {
-        public static readonly ApplSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C> Inst = default(ApplSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C>);
+        public static readonly ApplSet<OrdFABC, OrdFBC, OrdA, OrdB, OrdC, A, B, C> Inst = default;
 
         [Pure]
         public Set<OrdFBC, Func<B, C>> Apply(Set<OrdFABC, Func<A, Func<B, C>>> fabc, Set<OrdA, A> fa)
@@ -201,7 +201,7 @@ namespace LanguageExt.ClassInstances
         where OrdFAAA : struct, Ord<Func<A, Func<A, A>>>
         where OrdFAA : struct, Ord<Func<A, A>>
     {
-        public static readonly ApplSet<A> Inst = default(ApplSet<A>);
+        public static readonly ApplSet<A> Inst = default;
 
         [Pure]
         public Set<OrdA, A> Action(Set<OrdA, A> fa, Set<OrdA, A> fb)

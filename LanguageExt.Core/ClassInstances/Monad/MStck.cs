@@ -19,7 +19,7 @@ namespace LanguageExt.ClassInstances
         Eq<Stck<A>>,
         Monoid<Stck<A>>
    {
-        public static readonly MStck<A> Inst = default(MStck<A>);
+        public static readonly MStck<A> Inst = default;
 
         [Pure]
         public Stck<A> Append(Stck<A> x, Stck<A> y) =>

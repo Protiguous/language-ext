@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct Any : Monoid<bool>, Bool<bool>
     {
-        public static readonly Any Inst = default(Any);
+        public static readonly Any Inst = default;
 
         [Pure]
         public bool Append(bool x, bool y) => x || y;

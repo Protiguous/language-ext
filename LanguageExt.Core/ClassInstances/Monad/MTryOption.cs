@@ -14,7 +14,7 @@ namespace LanguageExt.ClassInstances
         BiFoldable<TryOption<A>, A, Unit>,
         AsyncPair<TryOption<A>, TryOptionAsync<A>>
     {
-        public static readonly MTryOption<A> Inst = default(MTryOption<A>);
+        public static readonly MTryOption<A> Inst = default;
 
         static TryOption<A> none = () => Option<A>.None;
 

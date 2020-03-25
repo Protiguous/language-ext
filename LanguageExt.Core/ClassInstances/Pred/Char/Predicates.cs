@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances.Pred
         where MIN : struct, Const<char>
         where MAX : struct, Const<char>
     {
-        public static readonly CharSatisfy<MIN, MAX> Is = default(CharSatisfy<MIN, MAX>);
+        public static readonly CharSatisfy<MIN, MAX> Is = default;
 
         [Pure]
         public bool True(char value) =>
@@ -18,7 +18,7 @@ namespace LanguageExt.ClassInstances.Pred
     public struct Char<CH> : Pred<char>
         where CH : struct, Const<char>
     {
-        public static readonly Char<CH> Is = default(Char<CH>);
+        public static readonly Char<CH> Is = default;
 
         [Pure]
         public bool True(char value) =>
@@ -27,7 +27,7 @@ namespace LanguageExt.ClassInstances.Pred
 
     public struct Letter : Pred<char>
     {
-        public static readonly Letter Is = default(Letter);
+        public static readonly Letter Is = default;
 
         [Pure]
         public bool True(char value) =>
@@ -38,7 +38,7 @@ namespace LanguageExt.ClassInstances.Pred
 
     public struct Digit : Pred<char>
     {
-        public static readonly Digit Is = default(Digit);
+        public static readonly Digit Is = default;
 
         [Pure]
         public bool True(char value) =>
@@ -47,7 +47,7 @@ namespace LanguageExt.ClassInstances.Pred
 
     public struct Space : Pred<char>
     {
-        public static readonly Space Is = default(Space);
+        public static readonly Space Is = default;
 
         [Pure]
         public bool True(char value) =>
@@ -56,7 +56,7 @@ namespace LanguageExt.ClassInstances.Pred
 
     public struct AlphaNum : Pred<char>
     {
-        public static readonly AlphaNum Is = default(AlphaNum);
+        public static readonly AlphaNum Is = default;
 
         [Pure]
         public bool True(char value) =>

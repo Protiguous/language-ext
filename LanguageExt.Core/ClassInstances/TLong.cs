@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct TLong : Num<long>, Bool<long>
     {
-        public static readonly TLong Inst = default(TLong);
+        public static readonly TLong Inst = default;
 
         /// <summary>
         /// Equality test

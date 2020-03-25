@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     public struct FSet<A, B> :
         Functor<Set<A>, Set<B>, A, B>
     {
-        public static readonly FSet<A, B> Inst = default(FSet<A, B>);
+        public static readonly FSet<A, B> Inst = default;
 
         [Pure]
         public Set<B> Map(Set<A> ma, Func<A, B> f) =>
@@ -21,7 +21,7 @@ namespace LanguageExt.ClassInstances
         where OrdA : struct, Ord<A>
         where OrdB : struct, Ord<B>
     {
-        public static readonly FSet<OrdA, OrdB, A, B> Inst = default(FSet<OrdA, OrdB, A, B>);
+        public static readonly FSet<OrdA, OrdB, A, B> Inst = default;
 
         [Pure]
         public Set<OrdB, B> Map(Set<OrdA, A> ma, Func<A, B> f) =>

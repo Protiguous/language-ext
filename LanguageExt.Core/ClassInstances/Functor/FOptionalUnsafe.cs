@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         where OptionalA : struct, OptionalUnsafe<OA, A>
         where OptionalB : struct, OptionalUnsafe<OB, B>
     {
-        public static readonly FOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B> Inst = default(FOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B>);
+        public static readonly FOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B> Inst = default;
 
         [Pure]
         public OB BiMap(OA ma, Func<A, B> fa, Func<Unit, B> fb) =>

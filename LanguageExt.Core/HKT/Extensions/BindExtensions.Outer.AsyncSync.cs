@@ -89,7 +89,7 @@ namespace LanguageExt
                     foreach (var ia in ima)
                     {
                         var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
-                                                                  None: () => (true, Arr<B>.Empty, default(Exception)),
+                                                                  None: () => (true, Arr<B>.Empty, default),
                                                                   Fail: ex => (false, Arr<B>.Empty, ex));
 
                         if (!success && e == null) return TryOptionAsync(Option<Arr<B>>.None);
@@ -182,7 +182,7 @@ namespace LanguageExt
                     foreach (var ia in ima)
                     {
                         var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
-                                                                  None: () => (true, HashSet<B>.Empty, default(Exception)),
+                                                                  None: () => (true, HashSet<B>.Empty, default),
                                                                   Fail: ex => (false, HashSet<B>.Empty, ex));
 
                         if (!success && e == null) return TryOptionAsync(Option<HashSet<B>>.None);
@@ -274,7 +274,7 @@ namespace LanguageExt
                     foreach (var ia in ima)
                     {
                         var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
-                                                                  None: () => (true, Lst<B>.Empty, default(Exception)),
+                                                                  None: () => (true, Lst<B>.Empty, default),
                                                                   Fail: ex => (false, Lst<B>.Empty, ex));
 
                         if (!success && e == null) return TryOptionAsync(Option<Lst<B>>.None);
@@ -560,7 +560,7 @@ namespace LanguageExt
                     var results = Enumerable.Empty<B>();
                     foreach (var ia in ima)
                     {
-                        var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
+                        var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default),
                                                                   None: () => (true, Enumerable.Empty<B>(), default(Exception)),
                                                                   Fail: ex => (false, Enumerable.Empty<B>(), ex));
 
@@ -622,7 +622,7 @@ namespace LanguageExt
                     var results = Enumerable.Empty<B>();
                     foreach (var ia in ima)
                     {
-                        var (success, imb, e) = await f(ia).Match(Succ: b => (succ: true, res: b, left: default(Exception)),
+                        var (success, imb, e) = await f(ia).Match(Succ: b => (succ: true, res: b, left: default),
                                                                   Fail: ex => (succ: false, res: Enumerable.Empty<B>(), left: ex));
 
                         if (!success) return TryAsync<Seq<B>>(e);
@@ -638,7 +638,7 @@ namespace LanguageExt
                     var results = Enumerable.Empty<B>();
                     foreach (var ia in ima)
                     {
-                        var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
+                        var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default),
                                                                   None: () => (true, Enumerable.Empty<B>(), default(Exception)),
                                                                   Fail: ex => (false, Enumerable.Empty<B>(), ex));
 
@@ -728,7 +728,7 @@ namespace LanguageExt
                     foreach (var ia in ima)
                     {
                         var (success, imb, e) = await f(ia).Match(Some: b => (true, b, default(Exception)),
-                                                                  None: () => (true, Set<B>.Empty, default(Exception)),
+                                                                  None: () => (true, Set<B>.Empty, default),
                                                                   Fail: ex => (false, Set<B>.Empty, ex));
 
                         if (!success && e == null) return TryOptionAsync(Option<Set<B>>.None);

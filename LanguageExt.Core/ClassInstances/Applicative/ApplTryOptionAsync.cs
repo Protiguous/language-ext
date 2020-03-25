@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
         BiFunctorAsync<TryOptionAsync<A>, TryOptionAsync<B>, A, Unit, B>,
         ApplicativeAsync<TryOptionAsync<Func<A, B>>, TryOptionAsync<A>, TryOptionAsync<B>, A, B>
     {
-        public static readonly ApplTryOptionAsync<A, B> Inst = default(ApplTryOptionAsync<A, B>);
+        public static readonly ApplTryOptionAsync<A, B> Inst = default;
 
         [Pure]
         public TryOptionAsync<B> BiMapAsync(TryOptionAsync<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -185,7 +185,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplTryOptionAsync<A, B, C> :
         ApplicativeAsync<TryOptionAsync<Func<A, Func<B, C>>>, TryOptionAsync<Func<B, C>>, TryOptionAsync<A>, TryOptionAsync<B>, TryOptionAsync<C>, A, B, C>
     {
-        public static readonly ApplTryOptionAsync<A, B, C> Inst = default(ApplTryOptionAsync<A, B, C>);
+        public static readonly ApplTryOptionAsync<A, B, C> Inst = default;
 
         [Pure]
         public TryOptionAsync<Func<B, C>> Apply(TryOptionAsync<Func<A, Func<B, C>>> fabc, TryOptionAsync<A> fa) =>
@@ -244,7 +244,7 @@ namespace LanguageExt.ClassInstances
         ApplicativeAsync<TryOptionAsync<Func<A, A>>, TryOptionAsync<A>, TryOptionAsync<A>, A, A>,
         ApplicativeAsync<TryOptionAsync<Func<A, Func<A, A>>>, TryOptionAsync<Func<A, A>>, TryOptionAsync<A>, TryOptionAsync<A>, TryOptionAsync<A>, A, A, A>
     {
-        public static readonly ApplTryOptionAsync<A> Inst = default(ApplTryOptionAsync<A>);
+        public static readonly ApplTryOptionAsync<A> Inst = default;
 
         [Pure]
         public TryOptionAsync<A> BiMapAsync(TryOptionAsync<A> ma, Func<A, A> fa, Func<Unit, A> fb) =>

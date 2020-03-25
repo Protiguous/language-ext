@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<TryOption<A>, TryOption<B>, A, Unit, B>,
         Applicative<TryOption<Func<A, B>>, TryOption<A>, TryOption<B>, A, B>
     {
-        public static readonly ApplTryOption<A, B> Inst = default(ApplTryOption<A, B>);
+        public static readonly ApplTryOption<A, B> Inst = default;
 
         [Pure]
         public TryOption<B> BiMap(TryOption<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -40,7 +40,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplTryOption<A, B, C> :
         Applicative<TryOption<Func<A, Func<B, C>>>, TryOption<Func<B, C>>, TryOption<A>, TryOption<B>, TryOption<C>, A, B, C>
     {
-        public static readonly ApplTryOption<A, B, C> Inst = default(ApplTryOption<A, B, C>);
+        public static readonly ApplTryOption<A, B, C> Inst = default;
 
         [Pure]
         public TryOption<Func<B, C>> Apply(TryOption<Func<A, Func<B, C>>> fabc, TryOption<A> fa) =>
@@ -66,7 +66,7 @@ namespace LanguageExt.ClassInstances
         Applicative<TryOption<Func<A, A>>, TryOption<A>, TryOption<A>, A, A>,
         Applicative<TryOption<Func<A, Func<A, A>>>, TryOption<Func<A, A>>, TryOption<A>, TryOption<A>, TryOption<A>, A, A, A>
     {
-        public static readonly ApplTryOption<A> Inst = default(ApplTryOption<A>);
+        public static readonly ApplTryOption<A> Inst = default;
 
         [Pure]
         public TryOption<A> BiMap(TryOption<A> ma, Func<A, A> fa, Func<Unit, A> fb) =>

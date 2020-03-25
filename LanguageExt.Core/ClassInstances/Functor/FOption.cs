@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
         Functor<Option<A>, Option<B>, A, B>,
         BiFunctor<Option<A>, Option<B>, A, Unit, B>
     {
-        public static readonly FOption<A, B> Inst = default(FOption<A, B>);
+        public static readonly FOption<A, B> Inst = default;
 
         [Pure]
         public Option<B> BiMap(Option<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>

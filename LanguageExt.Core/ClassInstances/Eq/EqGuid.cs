@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqGuid : Eq<Guid>
     {
-        public static readonly EqGuid Inst = default(EqGuid);
+        public static readonly EqGuid Inst = default;
 
         /// <summary>
         /// Equality test

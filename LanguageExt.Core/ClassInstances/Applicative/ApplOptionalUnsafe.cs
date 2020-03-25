@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         where OptionalA : struct, OptionalUnsafe<OA, A>
         where OptionalB : struct, OptionalUnsafe<OB, B>
     {
-        public static readonly ApplOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B> Inst = default(ApplOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B>);
+        public static readonly ApplOptionalUnsafe<OptionalA, OptionalB, OA, OB, A, B> Inst = default;
 
         [Pure]
         public OB BiMap(OA ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -28,7 +28,7 @@ namespace LanguageExt.ClassInstances
             where OptionFA : struct, OptionalUnsafe<FA, A>
             where OptionFB : struct, OptionalUnsafe<FB, B>
     {
-        public static readonly ApplOptionalUnsafe<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B> Inst = default(ApplOptionalUnsafe<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B>);
+        public static readonly ApplOptionalUnsafe<OptionFAB, OptionFA, OptionFB, FAB, FA, FB, A, B> Inst = default;
 
         [Pure]
         public FB Action(FA fa, FB fb)
@@ -59,7 +59,7 @@ namespace LanguageExt.ClassInstances
             where OptionFB   : struct, OptionalUnsafe<FB, B>
             where OptionFC   : struct, OptionalUnsafe<FC, C>
     {
-        public static readonly ApplOptionalUnsafe<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C> Inst = default(ApplOptionalUnsafe<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C>);
+        public static readonly ApplOptionalUnsafe<OptionFABC, OptionFBC, OptionFA, OptionFB, OptionFC, FABC, FBC, FA, FB, FC, A, B, C> Inst = default;
 
         [Pure]
         public FBC Apply(FABC fabc, FA fa) =>

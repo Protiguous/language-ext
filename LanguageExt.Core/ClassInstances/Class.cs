@@ -79,7 +79,7 @@ namespace LanguageExt.ClassInstances
             {
                 var type = typeof(A).GetTypeInfo();
                 var genType = type.GetGenericTypeDefinition();
-                if (type.GenericTypeArguments == null || type.GenericTypeArguments.Length < 2) return default(A);
+                if (type.GenericTypeArguments == null || type.GenericTypeArguments.Length < 2) return default;
 
                 var last = type.GenericTypeArguments.Last();
                 var lastA = genType.GetTypeInfo().GenericTypeParameters.Last();
@@ -107,12 +107,12 @@ namespace LanguageExt.ClassInstances
                 }
                 else
                 {
-                    return default(A);
+                    return default;
                 }
             }
             catch (Exception)
             {
-                return default(A);
+                return default;
             }
         }
     }

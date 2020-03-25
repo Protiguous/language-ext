@@ -14,9 +14,9 @@ public static partial class TaskEitherAsyncExtensions
     public static EitherAsync<L, R> ToAsync<L, R>(this Task<Either<L, R>> ma) =>
         new EitherAsync<L, R>(
             ma.Map(a => 
-                a.Match(r => new EitherData<L, R>(EitherStatus.IsRight, r,default(L)), 
-                        l => new EitherData<L, R>(EitherStatus.IsLeft, default(R),l),
-                        () => new EitherData<L, R>(EitherStatus.IsBottom, default(R), default(L)))));
+                a.Match(r => new EitherData<L, R>(EitherStatus.IsRight, r,default), 
+                        l => new EitherData<L, R>(EitherStatus.IsLeft, default,l),
+                        () => new EitherData<L, R>(EitherStatus.IsBottom, default, default))));
 
     /// <summary>
     /// Add the bound values of x and y, uses an Add type-class to provide the add

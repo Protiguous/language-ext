@@ -25,7 +25,7 @@ namespace LanguageExt.ClassInstances
         Foldable<ValueTuple<A, A, A, A, A, A>, A>,
         Foldable<ValueTuple<A, A, A, A, A, A, A>, A>
     {
-        public static readonly FoldTuple<A> Inst = default(FoldTuple<A>);
+        public static readonly FoldTuple<A> Inst = default;
 
         [Pure]
         public Func<Unit, int> Count(Tuple<A> fa) => _ =>

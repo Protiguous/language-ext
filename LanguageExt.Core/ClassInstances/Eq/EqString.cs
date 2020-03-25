@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqString : Eq<string>
     {
-        public static readonly EqString Inst = default(EqString);
+        public static readonly EqString Inst = default;
 
         /// <summary>
         /// Equality test
@@ -36,7 +36,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqStringOrdinalIgnoreCase : Eq<string>
     {
-        public static readonly EqStringOrdinalIgnoreCase Inst = default(EqStringOrdinalIgnoreCase);
+        public static readonly EqStringOrdinalIgnoreCase Inst = default;
 
         /// <summary>
         /// Equality test
@@ -63,7 +63,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqStringOrdinal : Eq<string>
     {
-        public static readonly EqStringOrdinal Inst = default(EqStringOrdinal);
+        public static readonly EqStringOrdinal Inst = default;
 
         /// <summary>
         /// Equality test
@@ -90,7 +90,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqStringCurrentCultureIgnoreCase : Eq<string>
     {
-        public static readonly EqStringCurrentCultureIgnoreCase Inst = default(EqStringCurrentCultureIgnoreCase);
+        public static readonly EqStringCurrentCultureIgnoreCase Inst = default;
 
         /// <summary>
         /// Equality test
@@ -117,7 +117,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqStringCurrentCulture : Eq<string>
     {
-        public static readonly EqStringCurrentCulture Inst = default(EqStringCurrentCulture);
+        public static readonly EqStringCurrentCulture Inst = default;
 
         /// <summary>
         /// Equality test

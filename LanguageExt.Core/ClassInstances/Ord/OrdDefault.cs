@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdDefault<A> : Ord<A>
     {
-        public static readonly OrdDefault<A> Inst = default(OrdDefault<A>);
+        public static readonly OrdDefault<A> Inst = default;
 
         static readonly Func<A, A, int> ord;
 

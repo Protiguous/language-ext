@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct TInt : Num<int>, Monoid<int>, Bool<int>
     {
-        public static readonly TInt Inst = default(TInt);
+        public static readonly TInt Inst = default;
 
         /// <summary>
         /// Equality test

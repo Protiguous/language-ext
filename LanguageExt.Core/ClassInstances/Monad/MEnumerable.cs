@@ -18,7 +18,7 @@ namespace LanguageExt.ClassInstances
         Ord<IEnumerable<A>>,
         Monoid<IEnumerable<A>>
     {
-        public static readonly MEnumerable<A> Inst = default(MEnumerable<A>);
+        public static readonly MEnumerable<A> Inst = default;
 
         [Pure]
         public IEnumerable<A> Append(IEnumerable<A> x, IEnumerable<A> y) =>

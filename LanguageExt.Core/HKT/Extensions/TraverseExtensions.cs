@@ -170,7 +170,7 @@ namespace LanguageExt
             foreach (var item in ma)
             {
                 var (a, s, bottom) = item(state);
-                if (bottom) return (Value: new List<A>(), State: default(S), IsFaulted: true);
+                if (bottom) return (Value: new List<A>(), State: default, IsFaulted: true);
                 state = s;
                 values.Add(a);
             }
@@ -183,7 +183,7 @@ namespace LanguageExt
             foreach (var item in ma)
             {
                 var (a, s, bottom) = item(state);
-                if (bottom) return (Value: new List<B>(), State: default(S), IsFaulted: true);
+                if (bottom) return (Value: new List<B>(), State: default, IsFaulted: true);
                 state = s;
                 values.Add(f(a));
             }

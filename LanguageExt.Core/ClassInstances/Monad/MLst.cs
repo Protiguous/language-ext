@@ -17,7 +17,7 @@ namespace LanguageExt.ClassInstances
         Ord<Lst<A>>,
         Monoid<Lst<A>>
    {
-        public static readonly MLst<A> Inst = default(MLst<A>);
+        public static readonly MLst<A> Inst = default;
 
         [Pure]
         public Lst<A> Append(Lst<A> x, Lst<A> y) =>

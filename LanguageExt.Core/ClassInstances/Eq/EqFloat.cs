@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqFloat : Eq<float>
     {
-        public static readonly EqFloat Inst = default(EqFloat);
+        public static readonly EqFloat Inst = default;
 
         /// <summary>
         /// Equality test

@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
         Foldable<Validation<FAIL, SUCCESS>, SUCCESS>,
         Monad<Validation<FAIL, SUCCESS>, SUCCESS>
     {
-        public static readonly MValidation<FAIL, SUCCESS> Inst = default(MValidation<FAIL, SUCCESS>);
+        public static readonly MValidation<FAIL, SUCCESS> Inst = default;
 
         [Pure]
         public Validation<FAIL, SUCCESS> Append(Validation<FAIL, SUCCESS> x, Validation<FAIL, SUCCESS> y) =>

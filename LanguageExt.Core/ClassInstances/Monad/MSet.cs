@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         Eq<Set<A>>,
         Monoid<Set<A>>
    {
-        public static readonly MSet<A> Inst = default(MSet<A>);
+        public static readonly MSet<A> Inst = default;
 
         [Pure]
         public Set<A> Append(Set<A> x, Set<A> y) =>

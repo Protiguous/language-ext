@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
     public struct TArr<A> : 
         Monoid<Arr<A>>
     {
-        public static readonly TArr<A> Inst = default(TArr<A>);
+        public static readonly TArr<A> Inst = default;
 
         static readonly Arr<A> emp = new A[0];
 

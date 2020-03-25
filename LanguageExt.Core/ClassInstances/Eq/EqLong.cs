@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqLong : Eq<long>
     {
-        public static readonly EqLong Inst = default(EqLong);
+        public static readonly EqLong Inst = default;
 
         /// <summary>
         /// Equality test

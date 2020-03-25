@@ -6,7 +6,7 @@ namespace LanguageExt.ClassInstances
 {
     public struct TDouble : Ord<double>, Floating<double>
     {
-        public static readonly TDouble Inst = default(TDouble);
+        public static readonly TDouble Inst = default;
 
         /// <summary>
         /// Equality test

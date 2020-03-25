@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<EitherUnsafe<L, R>, EitherUnsafe<L, R2>, L, R, R2>,
         Applicative<EitherUnsafe<L, Func<R, R2>>, EitherUnsafe<L, R>, EitherUnsafe<L, R2>, R, R2>
     {
-        public static readonly ApplEitherUnsafe<L, R, R2> Inst = default(ApplEitherUnsafe<L, R, R2>);
+        public static readonly ApplEitherUnsafe<L, R, R2> Inst = default;
 
         [Pure]
         public EitherUnsafe<L, R2> BiMap(EitherUnsafe<L, R> ma, Func<L, R2> fa, Func<R, R2> fb) =>
@@ -41,7 +41,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<EitherUnsafe<L, R>, EitherUnsafe<L2, R2>, L, R, L2, R2>,
         Applicative<EitherUnsafe<L, Func<R, R2>>, EitherUnsafe<L, R>, EitherUnsafe<L, R2>, R, R2>
     {
-        public static readonly ApplEitherUnsafeBi<L, R, L2, R2> Inst = default(ApplEitherUnsafeBi<L, R, L2, R2>);
+        public static readonly ApplEitherUnsafeBi<L, R, L2, R2> Inst = default;
 
         [Pure]
         public EitherUnsafe<L2, R2> BiMap(EitherUnsafe<L, R> ma, Func<L, L2> fa, Func<R, R2> fb) =>
@@ -70,7 +70,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplEitherUnsafe<L, A, B, C> :
         Applicative<EitherUnsafe<L, Func<A, Func<B, C>>>, EitherUnsafe<L, Func<B, C>>, EitherUnsafe<L, A>, EitherUnsafe<L, B>, EitherUnsafe<L, C>, A, B, C>
     {
-        public static readonly ApplEitherUnsafe<L, A, B, C> Inst = default(ApplEitherUnsafe<L, A, B, C>);
+        public static readonly ApplEitherUnsafe<L, A, B, C> Inst = default;
 
         [Pure]
         public EitherUnsafe<L, Func<B, C>> Apply(EitherUnsafe<L, Func<A, Func<B, C>>> fab, EitherUnsafe<L, A> fa) =>

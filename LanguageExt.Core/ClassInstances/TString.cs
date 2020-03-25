@@ -6,7 +6,7 @@ namespace LanguageExt.ClassInstances
 {
     public struct TString : Ord<string>, Monoid<string>
     {
-        public static readonly TString Inst = default(TString);
+        public static readonly TString Inst = default;
 
         /// <summary>
         /// Append
@@ -60,7 +60,7 @@ namespace LanguageExt.ClassInstances
 
     public struct TStringOrdinalIgnoreCase : Ord<string>, Monoid<string>
     {
-        public static readonly TStringOrdinalIgnoreCase Inst = default(TStringOrdinalIgnoreCase);
+        public static readonly TStringOrdinalIgnoreCase Inst = default;
 
         /// <summary>
         /// Append
@@ -114,7 +114,7 @@ namespace LanguageExt.ClassInstances
 
     public struct TStringOrdinal : Ord<string>, Monoid<string>
     {
-        public static readonly TStringOrdinal Inst = default(TStringOrdinal);
+        public static readonly TStringOrdinal Inst = default;
 
         /// <summary>
         /// Append
@@ -168,7 +168,7 @@ namespace LanguageExt.ClassInstances
 
     public struct TStringCurrentCultureIgnoreCase : Ord<string>, Monoid<string>
     {
-        public static readonly TStringCurrentCultureIgnoreCase Inst = default(TStringCurrentCultureIgnoreCase);
+        public static readonly TStringCurrentCultureIgnoreCase Inst = default;
 
         /// <summary>
         /// Append
@@ -222,7 +222,7 @@ namespace LanguageExt.ClassInstances
 
     public struct TStringCurrentCulture : Ord<string>, Monoid<string>
     {
-        public static readonly TStringCurrentCulture Inst = default(TStringCurrentCulture);
+        public static readonly TStringCurrentCulture Inst = default;
 
         /// <summary>
         /// Append

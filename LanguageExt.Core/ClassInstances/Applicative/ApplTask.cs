@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         BiFunctorAsync<Task<A>, Task<B>, A, Unit, B>,
         ApplicativeAsync<Task<Func<A, B>>, Task<A>, Task<B>, A, B>
     {
-        public static readonly ApplTask<A, B> Inst = default(ApplTask<A, B>);
+        public static readonly ApplTask<A, B> Inst = default;
 
         [Pure]
         public Task<B> BiMapAsync(Task<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -73,7 +73,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplTask<A, B, C> :
         ApplicativeAsync<Task<Func<A, Func<B, C>>>, Task<Func<B, C>>, Task<A>, Task<B>, Task<C>, A, B, C>
     {
-        public static readonly ApplTask<A, B, C> Inst = default(ApplTask<A, B, C>);
+        public static readonly ApplTask<A, B, C> Inst = default;
 
         [Pure]
         public async Task<Func<B, C>> Apply(Task<Func<A, Func<B, C>>> fabc, Task<A> fa)
@@ -101,7 +101,7 @@ namespace LanguageExt.ClassInstances
         ApplicativeAsync<Task<Func<A, A>>, Task<A>, Task<A>, A, A>,
         ApplicativeAsync<Task<Func<A, Func<A, A>>>, Task<Func<A, A>>, Task<A>, Task<A>, Task<A>, A, A, A>
     {
-        public static readonly ApplTask<A> Inst = default(ApplTask<A>);
+        public static readonly ApplTask<A> Inst = default;
 
         [Pure]
         public Task<A> BiMapAsync(Task<A> ma, Func<A, A> fa, Func<Unit, A> fb) =>

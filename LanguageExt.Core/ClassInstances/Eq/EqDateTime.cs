@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct EqDateTime : Eq<DateTime>
     {
-        public static readonly EqDateTime Inst = default(EqDateTime);
+        public static readonly EqDateTime Inst = default;
 
         /// <summary>
         /// Equality test

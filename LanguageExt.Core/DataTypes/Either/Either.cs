@@ -57,7 +57,7 @@ namespace LanguageExt
 
             this.State = EitherStatus.IsRight;
             this.right = right;
-            this.left = default(L);
+            this.left = default;
         }
 
         private Either(L left)
@@ -66,7 +66,7 @@ namespace LanguageExt
                 throw new ValueIsNullException();
 
             this.State = EitherStatus.IsLeft;
-            this.right = default(R);
+            this.right = default;
             this.left = left;
         }
 
@@ -78,16 +78,16 @@ namespace LanguageExt
             switch(State)
             {
                 case EitherStatus.IsBottom:
-                    right = default(R);
-                    left = default(L);
+                    right = default;
+                    left = default;
                     break;
                 case EitherStatus.IsRight:
                     right = (R)info.GetValue("Right", typeof(R));
-                    left = default(L);
+                    left = default;
                     break;
                 case EitherStatus.IsLeft:
                     left = (L)info.GetValue("Left", typeof(L));
-                    right = default(R);
+                    right = default;
                     break;
 
                 default:
@@ -141,8 +141,8 @@ namespace LanguageExt
             if (first.Length == 0)
             {
                 this.State = EitherStatus.IsBottom;
-                this.right = default(R);
-                this.left = default(L);
+                this.right = default;
+                this.left = default;
             }
             else 
             {

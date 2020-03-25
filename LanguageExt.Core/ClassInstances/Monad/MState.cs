@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
 
         [Pure]
         public State<S, A> Fail(object err = null) =>
-            new State<S, A>(state => (default(A), state, true));
+            new State<S, A>(state => (default, state, true));
 
         [Pure]
         public State<S, S> Get() => state =>
@@ -62,7 +62,7 @@ namespace LanguageExt.ClassInstances
 
         [Pure]
         public State<S, A> Zero() => state =>
-            (default(A), state, true);
+            (default, state, true);
 
         [Pure]
         public Func<S, FoldState> Fold<FoldState>(State<S, A> fa, FoldState initialState, Func<FoldState, A, FoldState> f) =>

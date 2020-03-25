@@ -19,7 +19,7 @@ namespace LanguageExt.ClassInstances
         Eq<Seq<A>>,
         Monoid<Seq<A>>
     {
-        public static readonly MSeq<A> Inst = default(MSeq<A>);
+        public static readonly MSeq<A> Inst = default;
 
         [Pure]
         public Seq<A> Append(Seq<A> x, Seq<A> y) =>

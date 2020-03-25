@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
     public struct EqSeq<EqA, A> : Eq<Seq<A>>
         where EqA : struct, Eq<A>
     {
-        public static readonly EqSeq<EqA, A> Inst = default(EqSeq<EqA, A>);
+        public static readonly EqSeq<EqA, A> Inst = default;
 
         /// <summary>
         /// Equality check
@@ -58,7 +58,7 @@ namespace LanguageExt.ClassInstances
     /// <returns>True if x and y are equal</returns>
     public struct EqSeq<A> : Eq<Seq<A>>
     {
-        public static readonly EqSeq<A> Inst = default(EqSeq<A>);
+        public static readonly EqSeq<A> Inst = default;
 
         /// <summary>
         /// Equality check

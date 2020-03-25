@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances.Pred
         where EQ    : struct, Eq<A>
         where CONST : struct, Const<A>
     {
-        public static readonly Equal<EQ, A, CONST> Is = default(Equal<EQ, A, CONST>);
+        public static readonly Equal<EQ, A, CONST> Is = default;
 
         [Pure]
         public bool True(A value) =>

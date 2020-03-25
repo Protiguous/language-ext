@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<Try<A>, Try<B>, A, Unit, B>,
         Applicative<Try<Func<A, B>>, Try<A>, Try<B>, A, B>
     {
-        public static readonly ApplTry<A, B> Inst = default(ApplTry<A, B>);
+        public static readonly ApplTry<A, B> Inst = default;
 
         [Pure]
         public Try<B> BiMap(Try<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -40,7 +40,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplTry<A, B, C> :
         Applicative<Try<Func<A, Func<B, C>>>, Try<Func<B, C>>, Try<A>, Try<B>, Try<C>, A, B, C>
     {
-        public static readonly ApplTry<A, B, C> Inst = default(ApplTry<A, B, C>);
+        public static readonly ApplTry<A, B, C> Inst = default;
 
         [Pure]
         public Try<Func<B, C>> Apply(Try<Func<A, Func<B, C>>> fabc, Try<A> fa) =>
@@ -66,7 +66,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Try<Func<A, A>>, Try<A>, Try<A>, A, A>,
         Applicative<Try<Func<A, Func<A, A>>>, Try<Func<A, A>>, Try<A>, Try<A>, Try<A>, A, A, A>
     {
-        public static readonly ApplTry<A> Inst = default(ApplTry<A>);
+        public static readonly ApplTry<A> Inst = default;
 
         [Pure]
         public Try<A> BiMap(Try<A> ma, Func<A, A> fa, Func<Unit, A> fb) =>

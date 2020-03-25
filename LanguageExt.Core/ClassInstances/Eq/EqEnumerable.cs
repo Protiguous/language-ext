@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
     public struct EqEnumerable<EQ, A> : Eq<IEnumerable<A>>
         where EQ : struct, Eq<A>
     {
-        public static readonly EqEnumerable<EQ, A> Inst = default(EqEnumerable<EQ, A>);
+        public static readonly EqEnumerable<EQ, A> Inst = default;
 
         /// <summary>
         /// Equality check
@@ -56,7 +56,7 @@ namespace LanguageExt.ClassInstances
     /// <returns>True if x and y are equal</returns>
     public struct EqEnumerable<A> : Eq<IEnumerable<A>>
     {
-        public static readonly EqEnumerable<A> Inst = default(EqEnumerable<A>);
+        public static readonly EqEnumerable<A> Inst = default;
 
         /// <summary>
         /// Equality check

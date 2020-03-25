@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
     public struct OrdArray<OrdA, A> : Ord<A[]>
         where OrdA : struct, Ord<A>
     {
-        public static readonly OrdArray<OrdA, A> Inst = default(OrdArray<OrdA, A>);
+        public static readonly OrdArray<OrdA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -70,7 +70,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdArray<A> : Ord<A[]>
     {
-        public static readonly OrdArray<A> Inst = default(OrdArray<A>);
+        public static readonly OrdArray<A> Inst = default;
 
         /// <summary>
         /// Equality test

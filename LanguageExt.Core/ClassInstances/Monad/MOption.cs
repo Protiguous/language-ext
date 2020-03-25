@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         Ord<Option<A>>,
         AsyncPair<Option<A>, OptionAsync<A>>
     {
-        public static readonly MOption<A> Inst = default(MOption<A>);
+        public static readonly MOption<A> Inst = default;
 
         [Pure]
         public Option<A> None => 

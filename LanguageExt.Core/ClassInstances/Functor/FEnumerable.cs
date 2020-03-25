@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
     public struct FEnumerable<A, B> :
         Functor<IEnumerable<A>, IEnumerable<B>, A, B>
     {
-        public static readonly FEnumerable<A, B> Inst = default(FEnumerable<A, B>);
+        public static readonly FEnumerable<A, B> Inst = default;
 
         [Pure]
         public IEnumerable<B> Map(IEnumerable<A> ma, Func<A, B> f)

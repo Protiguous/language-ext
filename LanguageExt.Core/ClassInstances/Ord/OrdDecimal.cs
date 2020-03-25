@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdDecimal : Ord<decimal>
     {
-        public static readonly OrdDecimal Inst = default(OrdDecimal);
+        public static readonly OrdDecimal Inst = default;
 
         /// <summary>
         /// Equality test

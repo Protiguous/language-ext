@@ -15,7 +15,7 @@ namespace LanguageExt.ClassInstances
         FoldableAsync<TryOptionAsync<A>, A>,
         BiFoldableAsync<TryOptionAsync<A>, A, Unit>
     {
-        public static readonly MTryOptionFirstAsync<A> Inst = default(MTryOptionFirstAsync<A>);
+        public static readonly MTryOptionFirstAsync<A> Inst = default;
 
         static TryOptionAsync<A> none = new TryOptionAsync<A>(() => OptionalResult<A>.None.AsTask());
 

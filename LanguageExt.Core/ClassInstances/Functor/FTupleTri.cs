@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         TriFunctor<Tuple<A, B, C>, Tuple<T, U, V>, A, B, C, T, U, V>,
         TriFunctor<ValueTuple<A, B, C>, ValueTuple<T, U, V>, A, B, C, T, U, V>
     {
-        public static readonly FTupleTri<A, B, C, T, U, V> Inst = default(FTupleTri<A, B, C, T, U, V>);
+        public static readonly FTupleTri<A, B, C, T, U, V> Inst = default;
 
         /// <summary>
         /// Maps all three items in the tuple

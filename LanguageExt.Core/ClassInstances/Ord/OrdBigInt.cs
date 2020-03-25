@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances
     /// </summary>
     public struct OrdBigInt : Ord<bigint>
     {
-        public static readonly OrdBigInt Inst = default(OrdBigInt);
+        public static readonly OrdBigInt Inst = default;
 
         /// <summary>
         /// Equality test

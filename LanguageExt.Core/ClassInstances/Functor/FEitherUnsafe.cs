@@ -8,7 +8,7 @@ namespace LanguageExt.ClassInstances
         Functor<EitherUnsafe<L, R>, EitherUnsafe<L, R2>, R, R2>,
         BiFunctor<EitherUnsafe<L, R>, EitherUnsafe<L, R2>, L, R, R2>
     {
-        public static readonly FEitherUnsafe<L, R, R2> Inst = default(FEitherUnsafe<L, R, R2>);
+        public static readonly FEitherUnsafe<L, R, R2> Inst = default;
 
         [Pure]
         public EitherUnsafe<L, R2> BiMap(EitherUnsafe<L, R> ma, Func<L, R2> fa, Func<R, R2> fb) =>
@@ -28,7 +28,7 @@ namespace LanguageExt.ClassInstances
     public struct FEitherUnsafeBi<L, R, L2, R2> :
         BiFunctor<EitherUnsafe<L, R>, EitherUnsafe<L2, R2>, L, R, L2, R2>
     {
-        public static readonly FEitherUnsafeBi<L, R, L2, R2> Inst = default(FEitherUnsafeBi<L, R, L2, R2>);
+        public static readonly FEitherUnsafeBi<L, R, L2, R2> Inst = default;
 
         [Pure]
         public EitherUnsafe<L2, R2> BiMap(EitherUnsafe<L, R> ma, Func<L, L2> fa, Func<R, R2> fb) =>

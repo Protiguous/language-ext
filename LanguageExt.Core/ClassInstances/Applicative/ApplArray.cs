@@ -11,7 +11,7 @@ namespace LanguageExt.ClassInstances
         Functor<A[], B[], A, B>,
         Applicative<Func<A, B>[], A[], B[], A, B>
     {
-        public static readonly ApplArray<A, B> Inst = default(ApplArray<A, B>);
+        public static readonly ApplArray<A, B> Inst = default;
 
         [Pure]
         public B[] Action(A[] fa, B[] fb) =>
@@ -37,7 +37,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplArray<A, B, C> :
         Applicative<Func<A, Func<B, C>>[], Func<B, C>[], A[], B[], C[], A, B, C>
     {
-        public static readonly ApplArray<A, B, C> Inst = default(ApplArray<A, B, C>);
+        public static readonly ApplArray<A, B, C> Inst = default;
 
         [Pure]
         public Func<B, C>[] Apply(Func<A, Func<B, C>>[] fabc, A[] fa) =>
@@ -61,7 +61,7 @@ namespace LanguageExt.ClassInstances
         Applicative<Func<A, A>[], A[], A[], A, A>,
         Applicative<Func<A, Func<A, A>>[], Func<A, A>[], A[], A[], A[], A, A, A>
     {
-        public static readonly ApplArray<A> Inst = default(ApplArray<A>);
+        public static readonly ApplArray<A> Inst = default;
 
         [Pure]
         public A[] Action(A[] fa, A[] fb) =>

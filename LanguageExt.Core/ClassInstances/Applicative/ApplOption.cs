@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
         BiFunctor<Option<A>, Option<B>, A, Unit, B>,
         Applicative<Option<Func<A, B>>, Option<A>, Option<B>, A, B>
     {
-        public static readonly ApplOption<A, B> Inst = default(ApplOption<A, B>);
+        public static readonly ApplOption<A, B> Inst = default;
 
         [Pure]
         public Option<B> BiMap(Option<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -48,7 +48,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplOption<A, B, C> :
         Applicative<Option<Func<A, Func<B, C>>>, Option<Func<B, C>>, Option<A>, Option<B>, Option<C>, A, B, C>
     {
-        public static readonly ApplOption<A, B, C> Inst = default(ApplOption<A, B, C>);
+        public static readonly ApplOption<A, B, C> Inst = default;
 
         [Pure]
         public Option<Func<B, C>> Apply(Option<Func<A, Func<B, C>>> fab, Option<A> fa) =>

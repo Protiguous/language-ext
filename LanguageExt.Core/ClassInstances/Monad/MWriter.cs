@@ -35,13 +35,13 @@ namespace LanguageExt.ClassInstances
         {
             var (b, output2, faulted) = mb();
             return () => faulted
-                ? (default(A), default(MonoidW).Empty(), true)
+                ? (default, default(MonoidW).Empty(), true)
                 : (b, default(MonoidW).Append(output.Item1, output2), false);
         }
 
         [Pure]
         public Writer<MonoidW, W, A> Fail(object err = null) =>
-            new Writer<MonoidW, W, A>(() => (default(A), default(MonoidW).Empty(), true));
+            new Writer<MonoidW, W, A>(() => (default, default(MonoidW).Empty(), true));
 
         [Pure]
         public Writer<MonoidW, W, A> Writer(A value, W output) =>
@@ -74,7 +74,7 @@ namespace LanguageExt.ClassInstances
         public Writer<MonoidW, W, (A, B)> Listen<B>(Writer<MonoidW, W, A> ma, Func<W, B> f) => () =>
         {
             var (a, output, faulted) = ma();
-            if (faulted) return (default((A, B)), default(MonoidW).Empty(), true);
+            if (faulted) return (default, default(MonoidW).Empty(), true);
             return ((a, f(output)), output, false);
         };
 
@@ -89,7 +89,7 @@ namespace LanguageExt.ClassInstances
 
         [Pure]
         public Writer<MonoidW, W, A> Zero() =>
-            () => (default(A), default(MonoidW).Empty(), true);
+            () => (default, default(MonoidW).Empty(), true);
 
         [Pure]
         public Func<Unit, S> Fold<S>(Writer<MonoidW, W, A> fa, S state, Func<S, A, S> f) => _ =>

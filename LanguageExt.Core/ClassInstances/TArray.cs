@@ -10,7 +10,7 @@ namespace LanguageExt.ClassInstances
 {
     public struct TArray<A> : Monoid<A[]>
     {
-        public static readonly TArray<A> Inst = default(TArray<A>);
+        public static readonly TArray<A> Inst = default;
 
         static readonly A[] emp = new A[0];
 

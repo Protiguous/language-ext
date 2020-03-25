@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         FoldableAsync<OptionAsync<A>, A>,
         BiFoldableAsync<OptionAsync<A>, A, Unit>
     {
-        public static readonly MOptionAsync<A> Inst = default(MOptionAsync<A>);
+        public static readonly MOptionAsync<A> Inst = default;
 
         [Pure]
         public OptionAsync<A> None => OptionAsync<A>.None;

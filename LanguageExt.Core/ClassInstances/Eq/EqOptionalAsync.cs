@@ -13,7 +13,7 @@ namespace LanguageExt.ClassInstances
         where EQ     : struct, Eq<A>
         where OPTION : struct, OptionalAsync<OA, A>
     {
-        public static readonly EqOptionalAsync<EQ, OPTION, OA, A> Inst = default(EqOptionalAsync<EQ, OPTION, OA, A>);
+        public static readonly EqOptionalAsync<EQ, OPTION, OA, A> Inst = default;
 
         /// <summary>
         /// Equality test
@@ -68,7 +68,7 @@ namespace LanguageExt.ClassInstances
     public struct EqOptionalAsync<OPTION, OA, A> : EqAsync<OA>
         where OPTION : struct, OptionalAsync<OA, A>
     {
-        public static readonly EqOptionalAsync<OPTION, OA, A> Inst = default(EqOptionalAsync<OPTION, OA, A>);
+        public static readonly EqOptionalAsync<OPTION, OA, A> Inst = default;
 
         /// <summary>
         /// Equality test

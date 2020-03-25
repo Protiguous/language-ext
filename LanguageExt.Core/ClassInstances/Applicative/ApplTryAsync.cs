@@ -12,7 +12,7 @@ namespace LanguageExt.ClassInstances
         BiFunctorAsync<TryAsync<A>, TryAsync<B>, A, Unit, B>,
         ApplicativeAsync<TryAsync<Func<A, B>>, TryAsync<A>, TryAsync<B>, A, B>
     {
-        public static readonly ApplTryAsync<A, B> Inst = default(ApplTryAsync<A, B>);
+        public static readonly ApplTryAsync<A, B> Inst = default;
 
         [Pure]
         public TryAsync<B> BiMapAsync(TryAsync<A> ma, Func<A, B> fa, Func<Unit, B> fb) =>
@@ -88,7 +88,7 @@ namespace LanguageExt.ClassInstances
     public struct ApplTryAsync<A, B, C> :
         ApplicativeAsync<TryAsync<Func<A, Func<B, C>>>, TryAsync<Func<B, C>>, TryAsync<A>, TryAsync<B>, TryAsync<C>, A, B, C>
     {
-        public static readonly ApplTryAsync<A, B, C> Inst = default(ApplTryAsync<A, B, C>);
+        public static readonly ApplTryAsync<A, B, C> Inst = default;
 
         [Pure]
         public TryAsync<Func<B, C>> Apply(TryAsync<Func<A, Func<B, C>>> fabc, TryAsync<A> fa) =>
@@ -149,7 +149,7 @@ namespace LanguageExt.ClassInstances
         ApplicativeAsync<TryAsync<Func<A, A>>, TryAsync<A>, TryAsync<A>, A, A>,
         ApplicativeAsync<TryAsync<Func<A, Func<A, A>>>, TryAsync<Func<A, A>>, TryAsync<A>, TryAsync<A>, TryAsync<A>, A, A, A>
     {
-        public static readonly ApplTryAsync<A> Inst = default(ApplTryAsync<A>);
+        public static readonly ApplTryAsync<A> Inst = default;
 
         [Pure]
         public TryAsync<A> BiMapAsync(TryAsync<A> ma, Func<A, A> fa, Func<Unit, A> fb) => () =>

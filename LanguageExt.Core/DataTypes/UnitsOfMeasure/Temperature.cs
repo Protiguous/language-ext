@@ -8,57 +8,26 @@ namespace LanguageExt.UnitsOfMeasure
         IComparable<Temperature>,
         IEquatable<Temperature>
     {
-        internal enum UnitType
-        {
-            K, C, F
-        }
+        private readonly UnitType Type;
 
-        readonly UnitType Type;
-        readonly double Value;
+        private readonly double Value;
 
-        public static Temperature AbsoluteZero = default(Temperature);
+        public static Temperature AbsoluteZero = default;
+
         public static Temperature ZeroCelsius = new Temperature(UnitType.C, 0.0);
+
         public static Temperature ZeroFahrenheit = new Temperature(UnitType.F, 0.0);
 
-        internal Temperature(UnitType type, double value)
-        {
-            Type = type;
-            Value = value;
+        public Temperature Celsius =>
+            Type == UnitType.K ? new Temperature(UnitType.C, KtoC(Value))
+          : Type == UnitType.C ? this
+          : Type == UnitType.F ? new Temperature(UnitType.C, FtoC(Value))
+          : throw new NotSupportedException(Type.ToString());
 
-            if (this < AbsoluteZero) throw new ArgumentOutOfRangeException(nameof(value), $"{value} [{type}]", "Less than absolute zero");
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double CtoK(double x) => x + 273.15;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double KtoC(double x) => x - 273.15;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double FtoK(double x) => (x + 459.67) * 5.0 / 9.0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double KtoF(double x) => (x * 1.8) - 459.67;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double CtoF(double x) => (x * 1.8) + 32.0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static double FtoC(double x) => (x - 32.0) * 5.0 / 9.0;
-
-        public override int GetHashCode() =>
-            Value.GetHashCode();
-
-        public override bool Equals(object obj) =>
-            notnull(obj) && obj is Temperature t && Equals(t);
-
-        public bool Equals(Temperature rhs) =>
-            Value.Equals(rhs.Value);
-
-        public override string ToString() =>
-            Type == UnitType.K ? $"{Value} K"
-          : Type == UnitType.C ? $"{Value} °C"
-          : Type == UnitType.F ? $"{Value} °F"
+        public Temperature Fahrenheit =>
+            Type == UnitType.K ? new Temperature(UnitType.F, KtoF(Value))
+          : Type == UnitType.C ? new Temperature(UnitType.F, CtoF(Value))
+          : Type == UnitType.F ? this
           : throw new NotSupportedException(Type.ToString());
 
         public Temperature Kelvin =>
@@ -73,33 +42,88 @@ namespace LanguageExt.UnitsOfMeasure
           : Type == UnitType.F ? FtoK(Value)
           : throw new NotSupportedException(Type.ToString());
 
-        public Temperature Celsius =>
-            Type == UnitType.K ? new Temperature(UnitType.C, KtoC(Value))
-          : Type == UnitType.C ? this
-          : Type == UnitType.F ? new Temperature(UnitType.C, FtoC(Value))
-          : throw new NotSupportedException(Type.ToString());
+        internal Temperature(UnitType type, double value)
+        {
+            Type = type;
+            Value = value;
 
-        public Temperature Fahrenheit =>
-            Type == UnitType.K ? new Temperature(UnitType.F, KtoF(Value))
-          : Type == UnitType.C ? new Temperature(UnitType.F, CtoF(Value))
-          : Type == UnitType.F ? this
-          : throw new NotSupportedException(Type.ToString());
+            if (this < AbsoluteZero) throw new ArgumentOutOfRangeException(nameof(value), $"{value} [{type}]", "Less than absolute zero");
+        }
 
-        public bool Equals(Temperature rhs, double epsilon) =>
+        internal enum UnitType
+        {
+            K, C, F
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double CtoF(double x) => (x * 1.8) + 32.0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double CtoK(double x) => x + 273.15;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double FtoC(double x) => (x - 32.0) * 5.0 / 9.0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double FtoK(double x) => (x + 459.67) * 5.0 / 9.0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double KtoC(double x) => x - 273.15;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double KtoF(double x) => (x * 1.8) - 459.67;
+
+        public static Temperature operator -(Temperature lhs, Temperature rhs) =>
+            lhs.Subtract(rhs);
+
+        public static bool operator !=(Temperature lhs, Temperature rhs) =>
+            !lhs.Equals(rhs);
+
+        public static Temperature operator *(Temperature lhs, double rhs) =>
+            lhs.Multiply(rhs);
+
+        public static Temperature operator *(double lhs, Temperature rhs) =>
+            rhs.Multiply(lhs);
+
+        public static Temperature operator /(Temperature lhs, double rhs) =>
+            lhs.Divide(rhs);
+
+        public static Temperature operator +(Temperature lhs, Temperature rhs) =>
+            lhs.Add(rhs);
+
+        public static bool operator <(Temperature lhs, Temperature rhs) =>
+            lhs.CompareTo(rhs) < 0;
+
+        public static bool operator <=(Temperature lhs, Temperature rhs) =>
+            lhs.CompareTo(rhs) <= 0;
+
+        public static bool operator ==(Temperature lhs, Temperature rhs) =>
+            lhs.Equals(rhs);
+
+        public static bool operator >(Temperature lhs, Temperature rhs) =>
+            lhs.CompareTo(rhs) > 0;
+
+        public static bool operator >=(Temperature lhs, Temperature rhs) =>
+            lhs.CompareTo(rhs) >= 0;
+
+        public Temperature Abs() =>
+            new Temperature(Type, Math.Abs(Value));
+
+        public Temperature Add(Temperature rhs) =>
             Type == UnitType.K ?
-                rhs.Type == UnitType.K ? Math.Abs(rhs.Value - Value) < epsilon
-              : rhs.Type == UnitType.C ? Math.Abs(CtoK(rhs.Value) - Value) < epsilon
-              : rhs.Type == UnitType.F ? Math.Abs(FtoK(rhs.Value) - Value) < epsilon
+                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Value + rhs.Value)
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Value + CtoK(rhs.Value))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Value + FtoK(rhs.Value))
               : throw new NotSupportedException(Type.ToString())
           : Type == UnitType.C ?
-                rhs.Type == UnitType.K ? Math.Abs(KtoC(rhs.Value) - Value) < epsilon
-              : rhs.Type == UnitType.C ? Math.Abs(rhs.Value - Value) < epsilon
-              : rhs.Type == UnitType.F ? Math.Abs(FtoC(rhs.Value) - Value) < epsilon
+                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Value + KtoC(rhs.Value))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Value + rhs.Value)
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Value + FtoC(rhs.Value))
               : throw new NotSupportedException(Type.ToString())
           : Type == UnitType.F ?
-                rhs.Type == UnitType.K ? Math.Abs(KtoF(rhs.Value) - Value) < epsilon
-              : rhs.Type == UnitType.C ? Math.Abs(CtoF(rhs.Value) - Value) < epsilon
-              : rhs.Type == UnitType.F ? Math.Abs(rhs.Value - Value) < epsilon
+                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Value + KtoF(rhs.Value))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Value + CtoF(rhs.Value))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Value + rhs.Value)
               : throw new NotSupportedException(Type.ToString())
           : throw new NotSupportedException(Type.ToString());
 
@@ -121,86 +145,53 @@ namespace LanguageExt.UnitsOfMeasure
               : throw new NotSupportedException(Type.ToString())
           : throw new NotSupportedException(Type.ToString());
 
-        public Temperature Add(Temperature rhs) =>
-            Type == UnitType.K ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Value + rhs.Value)
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Value + CtoK(rhs.Value))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Value + FtoK(rhs.Value))
-              : throw new NotSupportedException(Type.ToString())
-          : Type == UnitType.C ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Value + KtoC(rhs.Value))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Value + rhs.Value)
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Value + FtoC(rhs.Value))
-              : throw new NotSupportedException(Type.ToString())
-          : Type == UnitType.F ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Value + KtoF(rhs.Value))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Value + CtoF(rhs.Value))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Value + rhs.Value)
-              : throw new NotSupportedException(Type.ToString())
-          : throw new NotSupportedException(Type.ToString()); 
-
-        public Temperature Subtract(Temperature rhs) =>
-            Type == UnitType.K ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Value - rhs.Value)
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Value - CtoK(rhs.Value))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Value - FtoK(rhs.Value))
-              : throw new NotSupportedException(Type.ToString())
-          : Type == UnitType.C ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Value - KtoC(rhs.Value))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Value - rhs.Value)
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Value - FtoC(rhs.Value))
-              : throw new NotSupportedException(Type.ToString())
-          : Type == UnitType.F ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Value - KtoF(rhs.Value))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Value - CtoF(rhs.Value))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Value - rhs.Value)
-              : throw new NotSupportedException(Type.ToString())
-          : throw new NotSupportedException(Type.ToString());
-
-        public Temperature Multiply(double rhs) =>
-            new Temperature(Type, Value * rhs);
-
         public Temperature Divide(double rhs) =>
             new Temperature(Type, Value / rhs);
 
-        public static Temperature operator *(Temperature lhs, double rhs) =>
-            lhs.Multiply(rhs);
+        public override bool Equals(object obj) =>
+            notnull(obj) && obj is Temperature t && Equals(t);
 
-        public static Temperature operator *(double lhs, Temperature rhs) =>
-            rhs.Multiply(lhs);
+        public bool Equals(Temperature rhs) =>
+            Value.Equals(rhs.Value);
 
-        public static Temperature operator +(Temperature lhs, Temperature rhs) =>
-            lhs.Add(rhs);
+        public bool Equals(Temperature rhs, double epsilon) =>
+            Type == UnitType.K ?
+                rhs.Type == UnitType.K ? Math.Abs(rhs.Value - Value) < epsilon
+              : rhs.Type == UnitType.C ? Math.Abs(CtoK(rhs.Value) - Value) < epsilon
+              : rhs.Type == UnitType.F ? Math.Abs(FtoK(rhs.Value) - Value) < epsilon
+              : throw new NotSupportedException(Type.ToString())
+          : Type == UnitType.C ?
+                rhs.Type == UnitType.K ? Math.Abs(KtoC(rhs.Value) - Value) < epsilon
+              : rhs.Type == UnitType.C ? Math.Abs(rhs.Value - Value) < epsilon
+              : rhs.Type == UnitType.F ? Math.Abs(FtoC(rhs.Value) - Value) < epsilon
+              : throw new NotSupportedException(Type.ToString())
+          : Type == UnitType.F ?
+                rhs.Type == UnitType.K ? Math.Abs(KtoF(rhs.Value) - Value) < epsilon
+              : rhs.Type == UnitType.C ? Math.Abs(CtoF(rhs.Value) - Value) < epsilon
+              : rhs.Type == UnitType.F ? Math.Abs(rhs.Value - Value) < epsilon
+              : throw new NotSupportedException(Type.ToString())
+          : throw new NotSupportedException(Type.ToString());
 
-        public static Temperature operator -(Temperature lhs, Temperature rhs) =>
-            lhs.Subtract(rhs);
+        public override int GetHashCode() =>
+                                                                                                                                                            Value.GetHashCode();
 
-        public static Temperature operator /(Temperature lhs, double rhs) =>
-            lhs.Divide(rhs);
-
-        public static bool operator ==(Temperature lhs, Temperature rhs) =>
-            lhs.Equals(rhs);
-
-        public static bool operator !=(Temperature lhs, Temperature rhs) =>
-            !lhs.Equals(rhs);
-
-        public static bool operator >(Temperature lhs, Temperature rhs) =>
-            lhs.CompareTo(rhs) > 0;
-
-        public static bool operator <(Temperature lhs, Temperature rhs) =>
-            lhs.CompareTo(rhs) < 0;
-
-        public static bool operator >=(Temperature lhs, Temperature rhs) =>
-            lhs.CompareTo(rhs) >= 0;
-
-        public static bool operator <=(Temperature lhs, Temperature rhs) =>
-            lhs.CompareTo(rhs) <= 0;
-
-        public Temperature Round() =>
-            new Temperature(Type, Math.Round(Value));
-
-        public Temperature Abs() =>
-            new Temperature(Type, Math.Abs(Value));
+        public Temperature Max(Temperature rhs) =>
+            Type == UnitType.K ?
+                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Math.Max(Value, rhs.Value))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Math.Max(Value, CtoK(rhs.Value)))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Math.Max(Value, FtoK(rhs.Value)))
+              : throw new NotSupportedException(Type.ToString())
+          : Type == UnitType.C ?
+                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Math.Max(Value, KtoC(rhs.Value)))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Math.Max(Value, rhs.Value))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Math.Max(Value, FtoC(rhs.Value)))
+              : throw new NotSupportedException(Type.ToString())
+          : Type == UnitType.F ?
+                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Math.Max(Value, KtoF(rhs.Value)))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Math.Max(Value, CtoF(rhs.Value)))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Math.Max(Value, rhs.Value))
+              : throw new NotSupportedException(Type.ToString())
+          : throw new NotSupportedException(Type.ToString());
 
         public Temperature Min(Temperature rhs) =>
             Type == UnitType.K ?
@@ -220,22 +211,34 @@ namespace LanguageExt.UnitsOfMeasure
               : throw new NotSupportedException(Type.ToString())
           : throw new NotSupportedException(Type.ToString());
 
-        public Temperature Max(Temperature rhs) =>
+        public Temperature Multiply(double rhs) =>
+            new Temperature(Type, Value * rhs);
+
+        public Temperature Round() =>
+            new Temperature(Type, Math.Round(Value));
+
+        public Temperature Subtract(Temperature rhs) =>
             Type == UnitType.K ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Math.Max(Value, rhs.Value))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Math.Max(Value, CtoK(rhs.Value)))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Math.Max(Value, FtoK(rhs.Value)))
+                rhs.Type == UnitType.K ? new Temperature(UnitType.K, Value - rhs.Value)
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.K, Value - CtoK(rhs.Value))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.K, Value - FtoK(rhs.Value))
               : throw new NotSupportedException(Type.ToString())
           : Type == UnitType.C ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Math.Max(Value, KtoC(rhs.Value)))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Math.Max(Value, rhs.Value))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Math.Max(Value, FtoC(rhs.Value)))
+                rhs.Type == UnitType.K ? new Temperature(UnitType.C, Value - KtoC(rhs.Value))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.C, Value - rhs.Value)
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.C, Value - FtoC(rhs.Value))
               : throw new NotSupportedException(Type.ToString())
           : Type == UnitType.F ?
-                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Math.Max(Value, KtoF(rhs.Value)))
-              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Math.Max(Value, CtoF(rhs.Value)))
-              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Math.Max(Value, rhs.Value))
+                rhs.Type == UnitType.K ? new Temperature(UnitType.F, Value - KtoF(rhs.Value))
+              : rhs.Type == UnitType.C ? new Temperature(UnitType.F, Value - CtoF(rhs.Value))
+              : rhs.Type == UnitType.F ? new Temperature(UnitType.F, Value - rhs.Value)
               : throw new NotSupportedException(Type.ToString())
+          : throw new NotSupportedException(Type.ToString());
+
+        public override string ToString() =>
+                                                    Type == UnitType.K ? $"{Value} K"
+          : Type == UnitType.C ? $"{Value} °C"
+          : Type == UnitType.F ? $"{Value} °F"
           : throw new NotSupportedException(Type.ToString());
     }
 

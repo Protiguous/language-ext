@@ -16,7 +16,7 @@ namespace LanguageExt.ClassInstances
         Functor<Tuple<A, B, C>, Tuple<A, B, R>, C, R>,
         Functor<ValueTuple<A, B, C>, ValueTuple<A, B, R>, C, R>
     {
-        public static readonly FTupleThrd<A, B, C, R> Inst = default(FTupleThrd<A, B, C, R>);
+        public static readonly FTupleThrd<A, B, C, R> Inst = default;
 
         /// <summary>
         /// Maps the third item in a tuple 3

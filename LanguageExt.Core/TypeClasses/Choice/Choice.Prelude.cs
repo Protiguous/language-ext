@@ -11,143 +11,49 @@ namespace LanguageExt
 {
     public static partial class Choice
     {
-        /// <summary>
-        /// Match operation with an untyped value for Some. This can be
-        /// useful for serialisation and dealing with the IOptional interface
-        /// </summary>
-        /// <typeparam name="R">The return type</typeparam>
-        /// <param name="Some">Operation to perform if the option is in a Some state</param>
-        /// <param name="None">Operation to perform if the option is in a None state</param>
-        /// <returns>The result of the match operation</returns>
         [Pure]
-        public static R matchUntyped<CHOICE, CH, A, B, R>(CH ma, Func<object, R> Left, Func<object, R> Right, Func<R> Bottom = null)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: x => Left(x),
-                Right: y => Right(y),
-                Bottom: Bottom);
-
-        /// <summary>
-        /// Convert the Option to an enumerable of zero or one items
-        /// </summary>
-        /// <param name="ma">Option</param>
-        /// <returns>An enumerable of zero or one items</returns>
-        [Pure]
-        public static Arr<B> toArray<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: x => new B[0],
-                Right: y => new B[1] { y },
-                Bottom: () => new B[0]);
-
-        /// <summary>
-        /// Convert the Option to an immutable list of zero or one items
-        /// </summary>
-        /// <param name="ma">Option</param>
-        /// <returns>An immutable list of zero or one items</returns>
-        [Pure]
-        public static Lst<B> toList<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            toList<B>(toArray<CHOICE, CH, A, B>(ma));
-
-        /// <summary>
-        /// Convert the Option to an enumerable sequence of zero or one items
-        /// </summary>
-        /// <typeparam name="A">Bound value type</typeparam>
-        /// <param name="ma">Option</param>
-        /// <returns>An enumerable sequence of zero or one items</returns>
-        [Pure]
-        public static IEnumerable<B> toSeq<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            toArray<CHOICE, CH, A, B>(ma).AsEnumerable();
-
-        /// <summary>
-        /// Convert the structure to an Either
-        /// </summary>
-        [Pure]
-        public static Either<A, B> toEither<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: Left<A, B>,
-                Right: Right<A, B>);
-
-        /// <summary>
-        /// Convert the structure to an EitherUnsafe
-        /// </summary>
-        [Pure]
-        public static EitherUnsafe<A, B> toEitherUnsafe<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: LeftUnsafe<A, B>,
-                Right: RightUnsafe<A, B>);
-
-        /// <summary>
-        /// Convert the structure to a Option
-        /// </summary>
-        [Pure]
-        public static Option<B> toOption<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: _ => Option<B>.None,
-                Right:      Option<B>.Some,
-                Bottom: () => Option<B>.None);
-
-        /// <summary>
-        /// Convert the structure to a OptionUnsafe
-        /// </summary>
-        [Pure]
-        public static OptionUnsafe<B> toOptionUnsafe<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: _ => OptionUnsafe<B>.None,
-                Right:      OptionUnsafe<B>.Some,
-                Bottom: () => OptionUnsafe<B>.None);
-
-        /// <summary>
-        /// Convert the structure to a TryOption
-        /// </summary>
-        [Pure]
-        public static TryOption<B> toTryOption<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> => () =>
-                default(CHOICE).Match(ma,
-                    Left: _ => Option<B>.None,
-                    Right:      Option<B>.Some,
-                    Bottom: () => Option<B>.None);
+        public static int hashCode<CHOICE, CH, A, B>(CH ma)
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: a => a?.GetHashCode() ?? 0,
+                        Right: b => b?.GetHashCode() ?? 0,
+                        Bottom: () => -1
+                        );
 
         [Pure]
         public static B ifLeft<CHOICE, CH, A, B>(CH ma, Func<B> Left)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: _ => Left(),
-                Right: identity);
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: _ => Left(),
+                        Right: identity);
 
         [Pure]
         public static B ifLeft<CHOICE, CH, A, B>(CH ma, Func<A, B> leftMap)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: leftMap,
-                Right: identity);
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: leftMap,
+                        Right: identity);
 
         [Pure]
         public static B ifLeft<CHOICE, CH, A, B>(CH ma, B rightValue)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: _ => rightValue,
-                Right: identity);
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: _ => rightValue,
+                        Right: identity);
 
         public static Unit ifLeft<CHOICE, CH, A, B>(CH ma, Action<A> Left)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: a => { Left(a); return unit; },
-                Right: a => { return unit; },
-                Bottom: () => { return unit; });
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: a => { Left(a); return unit; },
+                        Right: a => { return unit; },
+                        Bottom: () => { return unit; });
 
         public static Unit ifRight<CHOICE, CH, A, B>(CH ma, Action<B> Right)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: a => { return unit; },
-                Right: b => { Right(b); return unit; },
-                Bottom: () => { return unit; });
+                    where CHOICE : struct, Choice<CH, A, B> =>
+                    default(CHOICE).Match(ma,
+                        Left: a => { return unit; },
+                        Right: b => { Right(b); return unit; },
+                        Bottom: () => { return unit; });
 
         /// <summary>
         /// Returns the leftValue if the Either is in a Right state.
@@ -189,54 +95,6 @@ namespace LanguageExt
                 Right: rightMap);
 
         /// <summary>
-        /// Project the Either into a Lst R
-        /// </summary>
-        /// <returns>If the Either is in a Right state, a Lst of R with one item.  A zero length Lst R otherwise</returns>
-        [Pure]
-        public static Lst<B> rightToList<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            rightAsEnumerable<CHOICE, CH, A, B>(ma).Freeze();
-
-        /// <summary>
-        /// Project the Either into an ImmutableArray R
-        /// </summary>
-        /// <returns>If the Either is in a Right state, a ImmutableArray of R with one item.  A zero length ImmutableArray of R otherwise</returns>
-        [Pure]
-        public static Arr<B> rightToArray<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            toArray<B>(rightAsEnumerable<CHOICE, CH, A, B>(ma));
-
-        /// <summary>
-        /// Project the Either into a Lst R
-        /// </summary>
-        /// <returns>If the Either is in a Right state, a Lst of R with one item.  A zero length Lst R otherwise</returns>
-        [Pure]
-        public static Lst<A> leftToList<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            leftAsEnumerable<CHOICE, CH, A, B>(ma).Freeze();
-
-        /// <summary>
-        /// Project the Either into an ImmutableArray R
-        /// </summary>
-        /// <returns>If the Either is in a Right state, a ImmutableArray of R with one item.  A zero length ImmutableArray of R otherwise</returns>
-        [Pure]
-        public static Arr<A> leftToArray<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            toArray<A>(leftAsEnumerable<CHOICE, CH, A, B>(ma));
-
-        /// <summary>
-        /// Project the Either into a IEnumerable R
-        /// </summary>
-        /// <returns>If the Either is in a Right state, a IEnumerable of R with one item.  A zero length IEnumerable R otherwise</returns>
-        [Pure]
-        public static Seq<B> rightAsEnumerable<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma, 
-                Left: _ => Empty,
-                Right: b => b.Cons(Empty),
-                Bottom: () => Empty);
-
-        /// <summary>
         /// Project the Either into a IEnumerable L
         /// </summary>
         /// <returns>If the Either is in a Left state, a IEnumerable of L with one item.  A zero length IEnumerable L otherwise</returns>
@@ -247,15 +105,6 @@ namespace LanguageExt
                 Left: a => a.Cons(Empty),
                 Right: _ => Empty,
                 Bottom: () => Empty);
-
-        [Pure]
-        public static int hashCode<CHOICE, CH, A, B>(CH ma)
-            where CHOICE : struct, Choice<CH, A, B> =>
-            default(CHOICE).Match(ma,
-                Left: a => a?.GetHashCode() ?? 0,
-                Right: b => b?.GetHashCode() ?? 0,
-                Bottom: () => -1
-                );
 
         /// <summary>
         /// Extracts from a list of 'Either' all the 'Left' elements.
@@ -276,8 +125,8 @@ namespace LanguageExt
                     yield return default(CHOICE).Match(
                         item,
                         Left: x => x,
-                        Right: y => default(A),
-                        Bottom: () => default(A));
+                        Right: y => default,
+                        Bottom: () => default);
                 }
             }
         }
@@ -296,42 +145,38 @@ namespace LanguageExt
             Seq(lefts<CHOICE, CH, A, B>(ma.AsEnumerable()));
 
         /// <summary>
-        /// Extracts from a list of 'Either' all the 'Right' elements.
-        /// All the 'Right' elements are extracted in order.
+        /// Project the Either into an ImmutableArray R
         /// </summary>
-        /// <typeparam name="L">Left</typeparam>
-        /// <typeparam name="R">Right</typeparam>
-        /// <param name="ma">Choice  list</param>
-        /// <returns>An enumerable of L</returns>
+        /// <returns>If the Either is in a Right state, a ImmutableArray of R with one item.  A zero length ImmutableArray of R otherwise</returns>
         [Pure]
-        public static IEnumerable<B> rights<CHOICE, CH, A, B>(IEnumerable<CH> ma)
-            where CHOICE : struct, Choice<CH, A, B>
-        {
-            foreach (var item in ma)
-            {
-                if (default(CHOICE).IsRight(item))
-                {
-                    yield return default(CHOICE).Match(
-                        item,
-                        Left: x => default(B),
-                        Right: y => y,
-                        Bottom: () => default(B));
-                }
-            }
-        }
+        public static Arr<A> leftToArray<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            toArray<A>(leftAsEnumerable<CHOICE, CH, A, B>(ma));
 
         /// <summary>
-        /// Extracts from a list of 'Either' all the 'Right' elements.
-        /// All the 'Right' elements are extracted in order.
+        /// Project the Either into a Lst R
         /// </summary>
-        /// <typeparam name="L">Left</typeparam>
-        /// <typeparam name="R">Right</typeparam>
-        /// <param name="ma">Choice  list</param>
-        /// <returns>An enumerable of L</returns>
+        /// <returns>If the Either is in a Right state, a Lst of R with one item.  A zero length Lst R otherwise</returns>
         [Pure]
-        public static Seq<B> rights<CHOICE, CH, A, B>(Seq<CH> ma)
+        public static Lst<A> leftToList<CHOICE, CH, A, B>(CH ma)
             where CHOICE : struct, Choice<CH, A, B> =>
-            Seq(rights<CHOICE, CH, A, B>(ma.AsEnumerable()));
+            leftAsEnumerable<CHOICE, CH, A, B>(ma).Freeze();
+
+        /// <summary>
+        /// Match operation with an untyped value for Some. This can be
+        /// useful for serialisation and dealing with the IOptional interface
+        /// </summary>
+        /// <typeparam name="R">The return type</typeparam>
+        /// <param name="Some">Operation to perform if the option is in a Some state</param>
+        /// <param name="None">Operation to perform if the option is in a None state</param>
+        /// <returns>The result of the match operation</returns>
+        [Pure]
+        public static R matchUntyped<CHOICE, CH, A, B, R>(CH ma, Func<object, R> Left, Func<object, R> Right, Func<R> Bottom = null)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: x => Left(x),
+                Right: y => Right(y),
+                Bottom: Bottom);
 
         /// <summary>
         /// Partitions a list of 'Either' into two lists.
@@ -362,5 +207,160 @@ namespace LanguageExt
         public static (Seq<A> Lefts, Seq<B> Rights) partition<CHOICE, CH, A, B>(Seq<CH> ma)
             where CHOICE : struct, Choice<CH, A, B> =>
             (lefts<CHOICE, CH, A, B>(ma), rights<CHOICE, CH, A, B>(ma));
+
+        /// <summary>
+        /// Project the Either into a IEnumerable R
+        /// </summary>
+        /// <returns>If the Either is in a Right state, a IEnumerable of R with one item.  A zero length IEnumerable R otherwise</returns>
+        [Pure]
+        public static Seq<B> rightAsEnumerable<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: _ => Empty,
+                Right: b => b.Cons(Empty),
+                Bottom: () => Empty);
+
+        /// <summary>
+        /// Extracts from a list of 'Either' all the 'Right' elements.
+        /// All the 'Right' elements are extracted in order.
+        /// </summary>
+        /// <typeparam name="L">Left</typeparam>
+        /// <typeparam name="R">Right</typeparam>
+        /// <param name="ma">Choice  list</param>
+        /// <returns>An enumerable of L</returns>
+        [Pure]
+        public static IEnumerable<B> rights<CHOICE, CH, A, B>(IEnumerable<CH> ma)
+            where CHOICE : struct, Choice<CH, A, B>
+        {
+            foreach (var item in ma)
+            {
+                if (default(CHOICE).IsRight(item))
+                {
+                    yield return default(CHOICE).Match(
+                        item,
+                        Left: x => default,
+                        Right: y => y,
+                        Bottom: () => default);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Extracts from a list of 'Either' all the 'Right' elements.
+        /// All the 'Right' elements are extracted in order.
+        /// </summary>
+        /// <typeparam name="L">Left</typeparam>
+        /// <typeparam name="R">Right</typeparam>
+        /// <param name="ma">Choice  list</param>
+        /// <returns>An enumerable of L</returns>
+        [Pure]
+        public static Seq<B> rights<CHOICE, CH, A, B>(Seq<CH> ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            Seq(rights<CHOICE, CH, A, B>(ma.AsEnumerable()));
+
+        /// <summary>
+        /// Project the Either into an ImmutableArray R
+        /// </summary>
+        /// <returns>If the Either is in a Right state, a ImmutableArray of R with one item.  A zero length ImmutableArray of R otherwise</returns>
+        [Pure]
+        public static Arr<B> rightToArray<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            toArray<B>(rightAsEnumerable<CHOICE, CH, A, B>(ma));
+
+        /// <summary>
+        /// Project the Either into a Lst R
+        /// </summary>
+        /// <returns>If the Either is in a Right state, a Lst of R with one item.  A zero length Lst R otherwise</returns>
+        [Pure]
+        public static Lst<B> rightToList<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            rightAsEnumerable<CHOICE, CH, A, B>(ma).Freeze();
+
+        /// <summary>
+        /// Convert the Option to an enumerable of zero or one items
+        /// </summary>
+        /// <param name="ma">Option</param>
+        /// <returns>An enumerable of zero or one items</returns>
+        [Pure]
+        public static Arr<B> toArray<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: x => new B[0],
+                Right: y => new B[1] { y },
+                Bottom: () => new B[0]);
+
+        /// <summary>
+        /// Convert the structure to an Either
+        /// </summary>
+        [Pure]
+        public static Either<A, B> toEither<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: Left<A, B>,
+                Right: Right<A, B>);
+
+        /// <summary>
+        /// Convert the structure to an EitherUnsafe
+        /// </summary>
+        [Pure]
+        public static EitherUnsafe<A, B> toEitherUnsafe<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: LeftUnsafe<A, B>,
+                Right: RightUnsafe<A, B>);
+
+        /// <summary>
+        /// Convert the Option to an immutable list of zero or one items
+        /// </summary>
+        /// <param name="ma">Option</param>
+        /// <returns>An immutable list of zero or one items</returns>
+        [Pure]
+        public static Lst<B> toList<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            toList<B>(toArray<CHOICE, CH, A, B>(ma));
+
+        /// <summary>
+        /// Convert the structure to a Option
+        /// </summary>
+        [Pure]
+        public static Option<B> toOption<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: _ => Option<B>.None,
+                Right: Option<B>.Some,
+                Bottom: () => Option<B>.None);
+
+        /// <summary>
+        /// Convert the structure to a OptionUnsafe
+        /// </summary>
+        [Pure]
+        public static OptionUnsafe<B> toOptionUnsafe<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            default(CHOICE).Match(ma,
+                Left: _ => OptionUnsafe<B>.None,
+                Right: OptionUnsafe<B>.Some,
+                Bottom: () => OptionUnsafe<B>.None);
+
+        /// <summary>
+        /// Convert the Option to an enumerable sequence of zero or one items
+        /// </summary>
+        /// <typeparam name="A">Bound value type</typeparam>
+        /// <param name="ma">Option</param>
+        /// <returns>An enumerable sequence of zero or one items</returns>
+        [Pure]
+        public static IEnumerable<B> toSeq<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> =>
+            toArray<CHOICE, CH, A, B>(ma).AsEnumerable();
+
+        /// <summary>
+        /// Convert the structure to a TryOption
+        /// </summary>
+        [Pure]
+        public static TryOption<B> toTryOption<CHOICE, CH, A, B>(CH ma)
+            where CHOICE : struct, Choice<CH, A, B> => () =>
+                default(CHOICE).Match(ma,
+                    Left: _ => Option<B>.None,
+                    Right: Option<B>.Some,
+                    Bottom: () => Option<B>.None);
     }
 }

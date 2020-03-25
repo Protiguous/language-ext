@@ -9,7 +9,7 @@ namespace LanguageExt.ClassInstances.Pred
             where NMin : struct, Const<int>
             where NMax : struct, Const<int>
     {
-        public static readonly StrLen<NMin, NMax> Is = default(StrLen<NMin, NMax>);
+        public static readonly StrLen<NMin, NMax> Is = default;
 
         [Pure]
         public bool True(string value) =>

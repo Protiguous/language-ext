@@ -28,7 +28,7 @@ namespace LanguageExt.ClassInstances
                 if (ord < 0) return go(xs, x.Cons(my));
                 else if (ord > 0)
                 {
-                    var (l, r) = cx.IfNone((default(Compositions<A>.Node), default(Compositions<A>.Node)));
+                    var (l, r) = cx.IfNone((default, default));
                     return go(r.Cons(l.Cons(xs)), my);
                 }
                 else

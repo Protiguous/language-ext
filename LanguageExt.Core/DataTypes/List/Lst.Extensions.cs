@@ -1024,7 +1024,7 @@ public static class ListExtensions
         var iter = self.GetEnumerator();
         bool remaining = false;
         bool first = true;
-        T item = default(T);
+        T item = default;
 
         do
         {
